@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartRehab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F4EE;
+    --surface:#FFFFFF;
+    --ink:#232A28;
+    --muted:#7C8983;
+    --primary:#1F5F52;
+    --primary-light:#E7EFE9;
+    --accent:#E2924B;
+    --line:#DDD8CC;
+    --danger:#C4573F;
+    --radius:18px;
+    --radius-sm:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    font-family:'IBM Plex Sans', sans-serif;
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+    padding:24px 12px 60px;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; margin:0; letter-spacing:-0.01em;}
+  .app{
+    width:100%;
+    max-width:420px;
+  }
+  .devbar{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin-bottom:14px;
+  }
+  .devbar button{
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--muted);
+    padding:6px 14px;
+    border-radius:999px;
+    font-size:12px;
+    font-family:'IBM Plex Sans',sans-serif;
+    cursor:pointer;
+  }
+  .devbar button.active{
+    background:var(--primary);
+    border-color:var(--primary);
+    color:#fff;
+  }
+  .phone{
+    background:var(--surface);
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:0 20px 40px -18px rgba(35,42,40,0.35);
+    border:1px solid var(--line);
+    min-height:640px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+  .topbar{
+    padding:16px 20px 10px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border-bottom:1px solid var(--line);
+  }
+  .back{
+    width:28px;height:28px;border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--surface);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer; color:var(--ink); font-size:14px;
+  }
+  .topbar .title{font-size:15px; font-weight:600; color:var(--ink);}
+  .screen{
+    display:none;
+    flex:1;
+    padding:22px 20px 26px;
+    flex-direction:column;
+    gap:18px;
+    opacity:0;
+    transform:translateX(14px);
+  }
+  .screen.active{
+    display:flex;
+    animation:screenIn .32s cubic-bezier(.22,.9,.34,1) forwards;
+  }
+  @keyframes screenIn{
+    to{ opacity:1; transform:translateX(0); }
+  }
+
+  button{ transition:transform .12s ease, box-shadow .12s ease, background .12s ease, opacity .12s ease; }
+  button:active{ transform:scale(0.97); }
+  .cta-primary, .cta-secondary, .btn-block{
+    box-shadow:0 6px 16px -8px rgba(31,95,82,0.45);
+  }
+  .cta-primary:hover, .btn-block:hover{ box-shadow:0 8px 20px -6px rgba(31,95,82,0.55); }
+  .cta-secondary:hover{ background:#DCEBE2; }
+  .slot, .bodytag, .tcard, .startbtn{ transition:transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease; }
+  .slot:hover:not(.full):not(.selected){ border-color:var(--primary); box-shadow:0 4px 10px -6px rgba(31,95,82,0.3); }
+  .slot:active:not(.full){ transform:scale(0.96); }
+  .tcard{ box-shadow:0 3px 14px -10px rgba(35,42,40,0.25); }
+  .tcard.top{ box-shadow:0 8px 22px -12px rgba(31,95,82,0.4); }
+
+  .spinner{
+    width:22px; height:22px; border-radius:50%;
+    border:2.5px solid var(--line); border-top-color:var(--primary);
+    animation:spin .7s linear infinite; margin:0 auto 8px;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* ---------- HOME ---------- */
+  .brandmark{
+    display:flex; align-items:center; gap:10px; margin-bottom:2px;
+  }
+  .brandmark .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);}
+  .brandmark span{font-size:12px; letter-spacing:0.12em; color:var(--muted); text-transform:uppercase;}
+  .hero-line{width:100%; height:52px;}
+  .hero-line path{ stroke-dasharray:400; stroke-dashoffset:400; animation:drawLine 1.4s ease forwards .1s; }
+  @keyframes drawLine{ to{ stroke-dashoffset:0; } }
+  .hello{font-size:14px; color:var(--muted); margin-top:6px;}
+  .hello b{color:var(--ink);}
+  h1.headline{font-size:26px; line-height:1.3; margin:6px 0 4px;}
+  .cta-primary{
+    margin-top:8px;
+    background:var(--primary);
+    color:#fff;
+    border:none;
+    padding:16px 18px;
+    border-radius:var(--radius-sm);
+    font-size:15px;
+    font-weight:600;
+    font-family:'IBM Plex Sans',sans-serif;
+    text-align:left;
+    display:flex; justify-content:space-between; align-items:center;
+    cursor:pointer;
+  }
+  .cta-secondary{
+    background:var(--primary-light);
+    color:var(--primary);
+    border:none;
+    padding:16px 18px;
+    border-radius:var(--radius-sm);
+    font-size:15px;
+    font-weight:600;
+    font-family:'IBM Plex Sans',sans-serif;
+    text-align:left;
+    display:flex; justify-content:space-between; align-items:center;
+    cursor:pointer;
+  }
+  .homefoot{margin-top:auto; font-size:11px; color:var(--muted); line-height:1.6;}
+
+  /* ---------- FORM ---------- */
+  .field label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px;}
+  .field input{
+    width:100%; padding:12px 14px; border-radius:var(--radius-sm);
+    border:1px solid var(--line); font-family:'IBM Plex Sans',sans-serif; font-size:14px;
+    background:var(--surface);
+  }
+  .field{margin-bottom:2px;}
+  .bodygrid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .bodytag{
+    border:1px solid var(--line); background:var(--surface); border-radius:var(--radius-sm);
+    padding:10px 6px; font-size:12.5px; text-align:center; cursor:pointer; color:var(--ink);
+  }
+  .bodytag.selected{background:var(--primary); border-color:var(--primary); color:#fff;}
+  .viewtoggle{display:flex; gap:8px; margin-bottom:10px;}
+  .vtbtn{
+    border:1px solid var(--line); background:var(--surface); color:var(--muted);
+    padding:6px 12px; border-radius:999px; font-size:12px; font-family:'IBM Plex Sans',sans-serif; cursor:pointer;
+  }
+  .vtbtn.active{background:var(--primary); border-color:var(--primary); color:#fff;}
+  .bodydiagram{
+    display:flex; justify-content:center; background:var(--primary-light); border-radius:var(--radius);
+    padding:10px 0;
+  }
+  .bodyview{width:150px; height:100%; display:none;}
+  .bodyview.active{display:block;}
+  .bd-deco{fill:var(--surface); stroke:var(--line); stroke-width:1.5;}
+  .bd-zone{fill:var(--surface); stroke:var(--primary); stroke-width:1.5; opacity:0.55; cursor:pointer; transition:fill .12s, opacity .12s;}
+  .bd-zone:hover{opacity:0.85;}
+  .bd-zone.selected{fill:var(--accent); stroke:var(--accent); opacity:0.95;}
+  .bodyselected{text-align:center; font-size:12.5px; color:var(--primary); font-weight:600; margin-top:8px;}
+  textarea{
+    width:100%; min-height:64px; padding:12px 14px; border-radius:var(--radius-sm);
+    border:1px solid var(--line); font-family:'IBM Plex Sans',sans-serif; font-size:14px; resize:none;
+  }
+  .step-eyebrow{font-size:11px; letter-spacing:0.1em; color:var(--accent); font-weight:600; text-transform:uppercase;}
+
+  /* ---------- THERAPIST MATCH ---------- */
+  .tcard{
+    border:1px solid var(--line); border-radius:var(--radius); padding:16px; background:var(--surface);
+  }
+  .tcard.top{border-color:var(--primary);}
+  .tcard-head{display:flex; justify-content:space-between; align-items:flex-start;}
+  .tcard-name{font-family:'Fraunces',serif; font-size:17px; font-weight:600;}
+  .badge{
+    background:var(--primary-light); color:var(--primary); font-size:11px; font-weight:600;
+    padding:3px 9px; border-radius:999px;
+  }
+  .tags{display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 12px;}
+  .tag{font-size:11px; color:var(--muted); border:1px solid var(--line); padding:3px 8px; border-radius:999px;}
+  .slots{display:flex; flex-wrap:wrap; gap:8px;}
+  .slot{
+    border:1px solid var(--line); border-radius:var(--radius-sm); padding:9px 12px; font-size:13px;
+    cursor:pointer; background:var(--surface);
+  }
+  .slot.selected{background:var(--primary); color:#fff; border-color:var(--primary);}
+  .slot.full{color:var(--muted); text-decoration:line-through; cursor:not-allowed; background:#F2F0EA;}
+
+  /* ---------- CONFIRM / LINE bubble ---------- */
+  .confirm-check{
+    width:56px;height:56px;border-radius:50%;background:var(--primary-light);
+    display:flex;align-items:center;justify-content:center;margin:6px auto 0;
+    color:var(--primary); font-size:26px;
+  }
+  .confirm-title{text-align:center; font-size:18px;}
+  .confirm-sub{text-align:center; font-size:13px; color:var(--muted); margin-top:-10px;}
+  .line-wrap{background:#8EC443; border-radius:16px; padding:12px;}
+  .line-head-bar{display:flex; align-items:center; gap:8px; padding:2px 4px 10px;}
+  .line-avatar-lg{width:26px;height:26px;border-radius:50%;background:var(--primary); display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700; flex:none;}
+  .line-brand-lg{font-size:13px; font-weight:700; color:#fff;}
+  .line-msg-row{display:flex; align-items:flex-end; gap:6px;}
+  .line-bubble{
+    background:#fff; border-radius:14px 14px 14px 3px; padding:14px 16px; font-size:13.5px; line-height:1.75;
+    flex:1;
+  }
+  .line-meta{font-size:10px; color:rgba(255,255,255,0.85); text-align:right; line-height:1.5; flex:none; white-space:nowrap;}
+  .line-detail{display:flex; gap:8px; align-items:center; margin-top:4px; font-size:13px;}
+
+  /* ---------- REHAB ---------- */
+  .exlist{display:flex; flex-direction:column; gap:10px;}
+  .exitem-wrap{border:1px solid var(--line); border-radius:var(--radius-sm); overflow:hidden; background:var(--surface);}
+  .exitem{
+    padding:12px 14px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .exitem.done{background:var(--primary-light);}
+  .exitem-wrap:has(.exitem.done){border-color:var(--primary);}
+  .exname{font-size:14px; font-weight:600;}
+  .exmeta{font-size:12px; color:var(--muted);}
+  .exdone-badge{font-size:12px; color:var(--primary); font-weight:600;}
+  .startbtn{
+    background:var(--primary); color:#fff; border:none; padding:8px 16px; border-radius:999px;
+    font-size:12.5px; font-weight:600; cursor:pointer;
+  }
+  .exguide{
+    display:none;
+    padding:12px 14px 16px; border-top:1px solid var(--line); background:var(--primary-light);
+    align-items:center; gap:12px;
+  }
+  .exguide.show{display:flex;}
+  .exguide svg{width:94px; height:56px; flex:none;}
+  .exguide span{font-size:12px; color:var(--ink); line-height:1.5;}
+  .gd-line{stroke:var(--primary); stroke-width:8; stroke-linecap:round; stroke-linejoin:round; fill:none;}
+  .gd-floor{stroke:var(--line); stroke-width:2; stroke-linecap:round;}
+  .gd-shape{fill:var(--primary); stroke:none;}
+  .timerwrap{
+    text-align:center; padding:26px 0; border:1px solid var(--line); border-radius:var(--radius); background:var(--primary-light);
+    animation:pulseBg 2s ease-in-out infinite;
+  }
+  @keyframes pulseBg{
+    0%,100%{ background:var(--primary-light); }
+    50%{ background:#DCEBE2; }
+  }
+  .timernum{font-family:'Fraunces',serif; font-size:44px; color:var(--primary);}
+  .timerlabel{font-size:12px; color:var(--muted); margin-top:4px;}
+  .toggle-row{display:flex; align-items:center; justify-content:space-between; font-size:13px; margin-top:10px;}
+  .switch{width:38px;height:22px;border-radius:999px;background:var(--line); position:relative; cursor:pointer;}
+  .switch.on{background:var(--primary);}
+  .switch .knob{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left .15s;}
+  .switch.on .knob{left:18px;}
+
+  /* ---------- VAS ---------- */
+  .vas-num{font-family:'Fraunces',serif; font-size:48px; text-align:center; color:var(--accent); transition:color .15s;}
+  .vas-sub{text-align:center; font-size:12px; color:var(--muted); margin-top:-12px;}
+  input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    width:100%; height:6px; border-radius:999px;
+    background:linear-gradient(to right, var(--primary), var(--accent));
+    outline:none; cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:24px; height:24px; border-radius:50%;
+    background:#fff; border:3px solid var(--accent);
+    box-shadow:0 3px 8px rgba(226,146,75,0.4);
+    cursor:pointer; transition:transform .12s;
+  }
+  input[type=range]::-webkit-slider-thumb:active{ transform:scale(1.15); }
+  input[type=range]::-moz-range-thumb{
+    width:24px; height:24px; border-radius:50%;
+    background:#fff; border:3px solid var(--accent);
+    box-shadow:0 3px 8px rgba(226,146,75,0.4); cursor:pointer;
+  }
+  .vas-scale{display:flex; justify-content:space-between; font-size:11px; color:var(--muted);}
+
+  /* ---------- TRACKING ---------- */
+  .statcard{border:1px solid var(--line); border-radius:var(--radius); padding:16px; background:var(--surface);}
+  .statlabel{font-size:12px; color:var(--muted);}
+  .ring-wrap{display:flex; align-items:center; gap:16px; margin-top:8px;}
+  .progress-ring{ transform:rotate(-90deg); flex:none; }
+  .ring-track{ fill:none; stroke:var(--primary-light); stroke-width:8; }
+  .ring-fill{
+    fill:none; stroke:var(--primary); stroke-width:8; stroke-linecap:round;
+    transition:stroke-dashoffset 1s cubic-bezier(.22,.9,.34,1);
+    animation:ringIn 1.1s cubic-bezier(.22,.9,.34,1) forwards;
+  }
+  @keyframes ringIn{ from{ stroke-dashoffset:238.76; } }
+  .ring-text{ transform:rotate(90deg); transform-origin:44px 44px; font-family:'Fraunces',serif; font-size:20px; fill:var(--ink); }
+  .ring-num{font-family:'Fraunces',serif; font-size:30px;}
+  .ring-sub{font-size:12px; color:var(--muted);}
+  .trendline{width:100%; height:120px;}
+  .trend-axis{stroke:var(--line); stroke-width:1;}
+
+  .btn-block{
+    margin-top:auto;
+    background:var(--primary); color:#fff; border:none; padding:15px; border-radius:var(--radius-sm);
+    font-size:14.5px; font-weight:600; cursor:pointer;
+  }
+  .btn-ghost{
+    background:transparent; color:var(--muted); border:1px solid var(--line); padding:13px; border-radius:var(--radius-sm);
+    font-size:13.5px; cursor:pointer;
+  }
+
+  .empty-state{
+    text-align:center; padding:34px 20px; border:1px dashed var(--line); border-radius:var(--radius);
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+  }
+  .empty-state svg{width:44px; height:44px; opacity:0.55;}
+  .empty-state .empty-title{font-size:13.5px; color:var(--ink); font-weight:600;}
+  .empty-state .empty-sub{font-size:12px; color:var(--muted);}
+
+  .tag-icon{display:inline-block; width:11px; height:11px; margin-right:4px; vertical-align:-1px;}
+
+  .mascot-row{display:flex; align-items:center; gap:12px; background:var(--primary-light); border-radius:var(--radius); padding:14px 16px;}
+  .mascot-row svg{width:44px; height:44px; flex:none;}
+  .mascot-msg{font-size:13px; color:var(--ink); line-height:1.5;}
+  .mascot-msg b{color:var(--primary);}
+  .mascot-pop{ animation:mascotPop .4s cubic-bezier(.34,1.4,.64,1); }
+  @keyframes mascotPop{ 0%{ transform:scale(0.6); opacity:0; } 100%{ transform:scale(1); opacity:1; } }
+
+  .mascot-float{
+    position:absolute; right:14px; bottom:74px; z-index:6;
+    display:flex; align-items:flex-end; gap:8px;
+  }
+  .mascot-float-icon{width:46px; height:46px; flex:none; filter:drop-shadow(0 4px 10px rgba(35,42,40,0.18)); cursor:grab; touch-action:none;}
+  .mascot-float-icon:active{cursor:grabbing;}
+  .mascot-bubble{
+    background:var(--surface); border:1px solid var(--line); border-radius:14px 14px 3px 14px;
+    padding:9px 12px; font-size:11.5px; color:var(--ink); line-height:1.4; max-width:150px;
+    box-shadow:0 6px 16px -8px rgba(35,42,40,0.25);
+    animation:mascotPop .4s cubic-bezier(.34,1.4,.64,1);
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="devbar">
+    <button id="mode-new" class="active" onclick="setMode('new')">示範：初診當下</button>
+    <button id="mode-return" onclick="setMode('return')">示範：時間快轉／復健第3週</button>
+  </div>
+
+  <div class="phone">
+
+    <!-- HOME -->
+    <section class="screen active" id="screen-home">
+      <div class="brandmark"><div class="dot"></div><span>SmartRehab</span></div>
+      <svg class="hero-line" viewBox="0 0 380 52"><path d="M4 40 C 60 10, 100 46, 150 22 S 250 4, 300 26 S 360 44, 376 18" fill="none" stroke="#1F5F52" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <div class="hello" id="home-hello">陳先生，您好</div>
+      <h1 class="headline" id="home-headline">讓復健，不只發生在診所裡</h1>
+      <button class="cta-primary" id="cta-book" onclick="go('form')">立即預約門診初診評估 <span>→</span></button>
+      <button class="cta-secondary" onclick="go('rehab')">前往今日居家復健 <span>→</span></button>
+      <button class="cta-secondary" onclick="go('followup')">預約複診 <span>→</span></button>
+      <button class="btn-ghost" onclick="go('myappt')" style="text-align:left;">查詢／取消預約</button>
+
+      <div class="homefoot" id="home-foot">已透過 LINE 辨識您的身份，免登入、免輸入密碼。</div>
+    </section>
+
+    <div class="mascot-float" id="home-mascot-float">
+      <div class="mascot-bubble" id="home-mascot-msg">豆芽在這裡陪你一起完成復健，加油！</div>
+      <svg viewBox="0 0 60 60" class="mascot-float-icon">
+        <circle cx="30" cy="30" r="29" fill="var(--surface)" stroke="var(--primary-light)" stroke-width="2"/>
+        <path d="M30 42 C30 30 30 24 30 19" stroke="var(--primary)" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+        <path d="M30 25 C25 22 20 24 18 19 C25 18 29 21 30 25Z" fill="var(--primary)"/>
+        <path d="M30 22 C35 19 40 21 42 16 C35 15 31 18 30 22Z" fill="var(--accent)"/>
+        <circle cx="30" cy="39" r="9.5" fill="var(--surface)" stroke="var(--primary)" stroke-width="2.2"/>
+        <circle cx="26.5" cy="38" r="1.4" fill="var(--ink)"/><circle cx="33.5" cy="38" r="1.4" fill="var(--ink)"/>
+        <path d="M26 41.5 Q30 44.5 34 41.5" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <!-- STEP1 FORM -->
+    <section class="screen" id="screen-form">
+      <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="title">初診資料</div></div>
+      <div class="step-eyebrow">STEP 1 / 3</div>
+      <div class="field"><label>姓名</label><input value="陳先生" id="in-name"></div>
+      <div class="field"><label>聯絡方式</label><input value="0912-345-678" id="in-phone"></div>
+      <div class="field">
+        <label>不適部位（可複選人體圖，決定治療師配對）</label>
+        <div class="viewtoggle">
+          <button type="button" class="vtbtn active" data-view="front" onclick="setBodyView('front')">正面</button>
+          <button type="button" class="vtbtn" data-view="back" onclick="setBodyView('back')">背面（上背／下背）</button>
+        </div>
+        <div class="bodydiagram">
+          <svg id="body-front" viewBox="0 0 200 380" class="bodyview active">
+            <path class="bd-deco" d="M70 60 Q100 72 130 60 L140 190 Q100 205 60 190 Z"/>
+            <path class="bd-deco" d="M62 75 L28 150 L40 158 L68 95 Z"/>
+            <path class="bd-deco" d="M138 75 L172 150 L160 158 L132 95 Z"/>
+            <path class="bd-deco" d="M72 195 L64 300 L84 300 L92 210 Z"/>
+            <path class="bd-deco" d="M128 195 L136 300 L116 300 L108 210 Z"/>
+            <rect class="bd-deco" x="66" y="298" width="20" height="60"/>
+            <rect class="bd-deco" x="114" y="298" width="20" height="60"/>
+
+            <circle class="bd-zone" data-tag="頭部" cx="100" cy="34" r="22"/>
+            <rect class="bd-zone" data-tag="頸部" x="86" y="56" width="28" height="16" rx="6"/>
+            <ellipse class="bd-zone" data-tag="肩膀" cx="60" cy="70" rx="17" ry="11"/>
+            <ellipse class="bd-zone" data-tag="肩膀" cx="140" cy="70" rx="17" ry="11"/>
+            <rect class="bd-zone" data-tag="手臂" x="26" y="88" width="38" height="60" rx="8"/>
+            <rect class="bd-zone" data-tag="手臂" x="136" y="88" width="38" height="60" rx="8"/>
+            <circle class="bd-zone" data-tag="手肘" cx="33" cy="155" r="12"/>
+            <circle class="bd-zone" data-tag="手肘" cx="167" cy="155" r="12"/>
+            <rect class="bd-zone" data-tag="髖部" x="66" y="188" width="68" height="26" rx="8"/>
+            <rect class="bd-zone" data-tag="腿部" x="62" y="216" width="30" height="128" rx="8"/>
+            <rect class="bd-zone" data-tag="腿部" x="108" y="216" width="30" height="128" rx="8"/>
+            <ellipse class="bd-zone" data-tag="膝蓋" cx="74" cy="278" rx="14" ry="12"/>
+            <ellipse class="bd-zone" data-tag="膝蓋" cx="126" cy="278" rx="14" ry="12"/>
+            <ellipse class="bd-zone" data-tag="踝足" cx="76" cy="352" rx="12" ry="10"/>
+            <ellipse class="bd-zone" data-tag="踝足" cx="124" cy="352" rx="12" ry="10"/>
+          </svg>
+
+          <svg id="body-back" viewBox="0 0 200 380" class="bodyview">
+            <path class="bd-deco" d="M70 60 Q100 72 130 60 L140 190 Q100 205 60 190 Z"/>
+            <path class="bd-deco" d="M62 75 L28 150 L40 158 L68 95 Z"/>
+            <path class="bd-deco" d="M138 75 L172 150 L160 158 L132 95 Z"/>
+            <path class="bd-deco" d="M72 195 L64 300 L84 300 L92 210 Z"/>
+            <path class="bd-deco" d="M128 195 L136 300 L116 300 L108 210 Z"/>
+            <rect class="bd-deco" x="66" y="298" width="20" height="60"/>
+            <rect class="bd-deco" x="114" y="298" width="20" height="60"/>
+
+            <circle class="bd-zone" data-tag="頭部" cx="100" cy="34" r="22"/>
+            <rect class="bd-zone" data-tag="頸部" x="86" y="56" width="28" height="16" rx="6"/>
+            <ellipse class="bd-zone" data-tag="肩膀" cx="60" cy="70" rx="17" ry="11"/>
+            <ellipse class="bd-zone" data-tag="肩膀" cx="140" cy="70" rx="17" ry="11"/>
+            <rect class="bd-zone" data-tag="手臂" x="26" y="88" width="38" height="60" rx="8"/>
+            <rect class="bd-zone" data-tag="手臂" x="136" y="88" width="38" height="60" rx="8"/>
+            <rect class="bd-zone" data-tag="上背" x="72" y="76" width="56" height="55" rx="10"/>
+            <rect class="bd-zone" data-tag="下背" x="72" y="134" width="56" height="52" rx="10"/>
+            <rect class="bd-zone" data-tag="髖部" x="66" y="188" width="68" height="26" rx="8"/>
+            <rect class="bd-zone" data-tag="腿部" x="62" y="216" width="30" height="128" rx="8"/>
+            <rect class="bd-zone" data-tag="腿部" x="108" y="216" width="30" height="128" rx="8"/>
+            <ellipse class="bd-zone" data-tag="膝蓋" cx="74" cy="278" rx="14" ry="12"/>
+            <ellipse class="bd-zone" data-tag="膝蓋" cx="126" cy="278" rx="14" ry="12"/>
+            <ellipse class="bd-zone" data-tag="踝足" cx="76" cy="352" rx="12" ry="10"/>
+            <ellipse class="bd-zone" data-tag="踝足" cx="124" cy="352" rx="12" ry="10"/>
+          </svg>
+        </div>
+        <div class="bodyselected" id="body-selected-label">請點選人體圖上的不適部位（可複選）</div>
+      </div>
+      <div class="field"><label>症狀描述（給治療師參考，不影響配對）</label><textarea id="in-symptom">下背疼痛，久坐後加劇</textarea></div>
+      <button class="btn-block" onclick="submitStep1()">下一步：查看推薦治療師</button>
+    </section>
+
+    <!-- MATCH -->
+    <section class="screen" id="screen-match">
+      <div class="topbar"><div class="back" onclick="go('form')">←</div><div class="title">推薦治療師</div></div>
+      <div class="step-eyebrow">STEP 2 / 3</div>
+
+      <div class="tcard top" id="match-loading" style="text-align:center; color:var(--muted); font-size:13px;">
+        <div class="spinner"></div>正在配對治療師...
+      </div>
+      <div id="match-results"></div>
+
+      <button class="btn-block" id="confirm-btn" onclick="submitBooking()" disabled>確認預約</button>
+    </section>
+
+    <!-- CONFIRM -->
+    <section class="screen" id="screen-confirm">
+      <div class="confirm-check">✓</div>
+      <h2 class="confirm-title">預約成功</h2>
+      <div class="confirm-sub">系統已透過 LINE 發送通知</div>
+
+      <div class="line-wrap">
+        <div class="line-head-bar">
+          <div class="line-avatar-lg">SR</div>
+          <div class="line-brand-lg">SmartRehab</div>
+        </div>
+        <div class="line-msg-row">
+          <div class="line-bubble">
+            <div id="line-msg">陳先生您好<br>您的初診評估已預約成功。</div>
+            <div class="line-detail">📅 <span id="line-date">8/17</span></div>
+            <div class="line-detail">🕐 <span id="line-time">14:00</span></div>
+            <div class="line-detail">👨‍⚕️ <span id="line-t">張治療師</span></div>
+            <div style="margin-top:10px; font-size:12px; color:#666;">看診前請提早 10 分鐘報到。</div>
+          </div>
+          <div class="line-meta">已讀<br>下午2:03</div>
+        </div>
+      </div>
+
+      <button class="btn-block" onclick="go('home')">回到首頁</button>
+    </section>
+
+    <!-- REHAB -->
+    <section class="screen" id="screen-rehab">
+      <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="title">居家復健</div></div>
+      <div class="hello">今日自主復健清單</div>
+
+      <div class="exlist" id="exlist">
+        <div class="exitem-wrap">
+          <div class="exitem" data-ex="橋式">
+            <div><div class="exname">① 橋式</div><div class="exmeta">3 組 × 10 次</div></div>
+            <button class="startbtn" onclick="startTimer('橋式', this)">開始</button>
+          </div>
+          <div class="exguide">
+            <svg viewBox="0 0 120 72"><line x1="4" y1="64" x2="116" y2="64" class="gd-floor"/>
+              <circle cx="18" cy="48" r="10" class="gd-shape"/>
+              <path d="M24 58 L56 28 L82 40 L98 60" class="gd-line" fill="none"/>
+            </svg>
+            <span>躺姿，雙膝彎曲，臀部向上抬起成橋形</span>
+          </div>
+        </div>
+
+        <div class="exitem-wrap">
+          <div class="exitem" data-ex="貓牛式">
+            <div><div class="exname">② 貓牛式</div><div class="exmeta">2 組 × 8 次</div></div>
+            <button class="startbtn" onclick="startTimer('貓牛式', this)">開始</button>
+          </div>
+          <div class="exguide">
+            <svg viewBox="0 0 120 72"><line x1="4" y1="65" x2="116" y2="65" class="gd-floor"/>
+              <line x1="28" y1="24" x2="28" y2="60" class="gd-line"/>
+              <line x1="92" y1="24" x2="92" y2="60" class="gd-line"/>
+              <path d="M28 24 Q60 6 92 24" class="gd-line" fill="none"/>
+              <circle cx="22" cy="19" r="10" class="gd-shape"/>
+            </svg>
+            <span>四足跪姿，脊椎緩慢一拱一塌，感受背部伸展</span>
+          </div>
+        </div>
+
+        <div class="exitem-wrap">
+          <div class="exitem" data-ex="核心訓練">
+            <div><div class="exname">③ 核心訓練</div><div class="exmeta">3 組 × 10 次</div></div>
+            <button class="startbtn" onclick="startTimer('核心訓練', this)">開始</button>
+          </div>
+          <div class="exguide">
+            <svg viewBox="0 0 120 72"><line x1="4" y1="66" x2="116" y2="66" class="gd-floor"/>
+              <circle cx="14" cy="34" r="10" class="gd-shape"/>
+              <line x1="18" y1="42" x2="18" y2="60" class="gd-line"/>
+              <path d="M18 42 L102 42" class="gd-line" fill="none"/>
+              <line x1="102" y1="42" x2="108" y2="60" class="gd-line"/>
+            </svg>
+            <span>棒式支撐，身體呈一直線，核心收緊維持穩定</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mascot-row" id="mascot-done" style="display:none;">
+        <svg viewBox="0 0 60 60">
+          <ellipse cx="30" cy="48" rx="13" ry="6" fill="var(--primary-light)"/>
+          <path d="M30 46 C30 30 30 22 30 16" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M30 24 C24 20 18 22 16 16 C24 15 29 18 30 24Z" fill="var(--primary)"/>
+          <path d="M30 20 C36 16 42 18 44 12 C36 11 31 14 30 20Z" fill="var(--accent)"/>
+          <circle cx="30" cy="42" r="11" fill="var(--surface)" stroke="var(--primary)" stroke-width="2.5"/>
+          <path d="M25 40 Q26.5 38 28 40" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <path d="M32 40 Q33.5 38 35 40" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <path d="M24 44 Q30 50 36 44" stroke="var(--ink)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="mascot-msg">豆芽說：<b>今天的三項都完成了！</b>接下來記錄一下疼痛感覺吧</div>
+      </div>
+
+      <div class="timerwrap" id="timerwrap" style="display:none;">
+        <div class="timernum" id="timernum">00:45</div>
+        <div class="timerlabel" id="timerlabel">橋式 · 組間休息</div>
+      </div>
+      <div class="toggle-row">
+        <span>Visual Guide Mode（動作示範圖）</span>
+        <div class="switch" id="vg-switch" onclick="toggleSwitch(this)"><div class="knob"></div></div>
+      </div>
+
+      <button class="btn-block" onclick="go('vas')">完成今日復健，記錄疼痛</button>
+    </section>
+
+    <!-- VAS -->
+    <section class="screen" id="screen-vas">
+      <div class="topbar"><div class="back" onclick="go('rehab')">←</div><div class="title">今日疼痛</div></div>
+      <div class="hello">請為今天的疼痛程度評分</div>
+      <div class="vas-num" id="vas-num">3</div>
+      <div class="vas-sub">VAS 疼痛量表</div>
+      <input type="range" min="0" max="10" value="3" id="vas-range" oninput="document.getElementById('vas-num').textContent=this.value">
+      <div class="vas-scale"><span>0 無痛</span><span>10 劇痛</span></div>
+      <button class="btn-block" onclick="go('sync')">同步今日完成紀錄與疼痛日誌至診所</button>
+    </section>
+
+    <!-- SYNC (brief) then to tracking -->
+    <section class="screen" id="screen-sync">
+      <div class="confirm-check">✓</div>
+      <h2 class="confirm-title">已同步至診所</h2>
+      <div class="confirm-sub">治療師將可即時看到您的完成狀況</div>
+      <button class="btn-block" onclick="go('tracking')">查看我的復健追蹤</button>
+    </section>
+
+    <!-- TRACKING -->
+    <section class="screen" id="screen-tracking">
+      <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="title">復健追蹤</div></div>
+
+      <div class="mascot-row mascot-pop">
+        <svg viewBox="0 0 60 60">
+          <ellipse cx="30" cy="48" rx="13" ry="6" fill="var(--primary-light)"/>
+          <path d="M30 46 C30 30 30 22 30 16" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M30 24 C24 20 18 22 16 16 C24 15 29 18 30 24Z" fill="var(--primary)"/>
+          <path d="M30 20 C36 16 42 18 44 12 C36 11 31 14 30 20Z" fill="var(--accent)"/>
+          <circle cx="30" cy="42" r="11" fill="var(--surface)" stroke="var(--primary)" stroke-width="2.5"/>
+          <circle cx="26" cy="41" r="1.6" fill="var(--ink)"/><circle cx="34" cy="41" r="1.6" fill="var(--ink)"/>
+          <path d="M25 45 Q30 49 35 45" stroke="var(--ink)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="mascot-msg">豆芽說：本週已經完成 <b>5 天</b> 復健了，繼續保持這個節奏，你做得很好！</div>
+      </div>
+
+      <div class="statcard">
+        <div class="statlabel">本週復健遵從率</div>
+        <div class="ring-wrap">
+          <svg width="88" height="88" viewBox="0 0 88 88" class="progress-ring">
+            <circle cx="44" cy="44" r="38" class="ring-track"/>
+            <circle cx="44" cy="44" r="38" class="ring-fill" style="stroke-dasharray:238.76; stroke-dashoffset:69.24;"/>
+            <text x="44" y="50" text-anchor="middle" class="ring-text">71%</text>
+          </svg>
+          <div>
+            <div class="ring-num" style="font-size:15px; font-weight:600;">本週已完成</div>
+            <div class="ring-sub">5 天 ／ 已過 7 天</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="statcard">
+        <div class="statlabel" style="margin-bottom:8px;">疼痛變化（VAS）</div>
+        <svg class="trendline" viewBox="0 0 320 110">
+          <defs>
+            <linearGradient id="painGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1F5F52" stop-opacity="0.22"/>
+              <stop offset="100%" stop-color="#1F5F52" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="90" x2="320" y2="90" class="trend-axis"/>
+          <polygon points="10,20 100,35 200,55 310,70 310,90 10,90" fill="url(#painGrad)"/>
+          <polyline points="10,20 100,35 200,55 310,70" fill="none" stroke="#1F5F52" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="10" cy="20" r="4" fill="#1F5F52"/><text x="4" y="12" font-size="11" fill="#7C8983">6</text>
+          <circle cx="100" cy="35" r="4" fill="#1F5F52"/><text x="94" y="27" font-size="11" fill="#7C8983">5</text>
+          <circle cx="200" cy="55" r="4" fill="#1F5F52"/><text x="194" y="47" font-size="11" fill="#7C8983">4</text>
+          <circle cx="310" cy="70" r="7" fill="#fff" stroke="#E2924B" stroke-width="3"/>
+          <text x="296" y="90" font-size="12" fill="#E2924B" font-weight="700">3 分（今天）</text>
+        </svg>
+      </div>
+
+      <button class="btn-ghost" onclick="go('home')">回到首頁</button>
+    </section>
+
+    <!-- FOLLOWUP BOOKING -->
+    <section class="screen" id="screen-followup">
+      <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="title">預約複診</div></div>
+      <div class="field"><label>請輸入預約時填寫的聯絡方式</label><input id="followup-phone" placeholder="例如 0912-345-678" value="0912-345-678"></div>
+      <button class="btn-block" style="margin-top:0;" onclick="lookupFollowup()">查詢我的治療師</button>
+      <div id="followup-result"></div>
+    </section>
+
+    <!-- MY APPOINTMENTS -->
+    <section class="screen" id="screen-myappt">
+      <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="title">查詢／取消預約</div></div>
+      <div class="field"><label>請輸入預約時填寫的聯絡方式</label><input id="lookup-phone" placeholder="例如 0912-345-678" value="0912-345-678"></div>
+      <button class="btn-block" style="margin-top:0;" onclick="lookupAppointments()">查詢預約</button>
+      <div id="appt-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+function go(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  const floatEl = document.getElementById('home-mascot-float');
+  if(floatEl) floatEl.style.display = (name === 'home') ? 'flex' : 'none';
+}
+
+// ---------- 真實 API 串接（第一段：表單 → 治療師配對）----------
+const API_BASE = 'https://script.google.com/macros/s/AKfycby8y5rY7l4Gdtc2w1D0qw6vnxikdC3Zy-PPtwA7yl_Q8Drp3vBDS2VEzdHGEMja-qxnxw/exec';
+let currentPatientId = null;
+let patientReadyPromise = null;
+
+function submitStep1(){
+  if(!selectedBodyTags.size){ alert('請至少選擇一個不適部位'); return; }
+  const bodyPart = Array.from(selectedBodyTags).join(',');
+  const name = document.getElementById('in-name').value.trim();
+  const phone = document.getElementById('in-phone').value.trim();
+  const symptomNote = document.getElementById('in-symptom').value;
+  if(!name){ alert('請填寫姓名'); return; }
+  if(!phone){ alert('請填寫聯絡方式'); return; }
+
+  go('match');
+  const loadingEl = document.getElementById('match-loading');
+  const resultsEl = document.getElementById('match-results');
+  loadingEl.style.display = 'block';
+  loadingEl.innerHTML = '<div class="spinner"></div>正在配對治療師...';
+  resultsEl.innerHTML = '';
+  document.getElementById('confirm-btn').disabled = true;
+
+  // 建立病人資料（text/plain 避免瀏覽器對 Apps Script 送出 CORS 預檢請求失敗）
+  patientReadyPromise = fetch(API_BASE, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: 'createPatient', name, phone, bodyPart, symptomNote })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if(data.error) throw new Error(data.error);
+      currentPatientId = data.patient_id;
+      return currentPatientId;
+    })
+    .catch(err => {
+      console.error('建立病人資料失敗：', err.message);
+      throw err;
+    });
+
+  fetch(`${API_BASE}?action=match&bodyPart=${encodeURIComponent(bodyPart)}`)
+    .then(res => res.json())
+    .then(data => {
+      if(data.error){ throw new Error(data.error); }
+      renderMatchResults(data);
+    })
+    .catch(err => {
+      loadingEl.innerHTML = '配對失敗：' + err.message + '（請確認 API 網址與部署狀態）';
+    });
+}
+
+function renderMatchResults(therapists){
+  const loadingEl = document.getElementById('match-loading');
+  const resultsEl = document.getElementById('match-results');
+  loadingEl.style.display = 'none';
+
+  if(!therapists.length){
+    resultsEl.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>
+      <div class="empty-title">目前沒有符合的治療師</div>
+      <div class="empty-sub">可以嘗試調整選取的不適部位再查一次</div>
+    </div>`;
+    return;
+  }
+
+  resultsEl.innerHTML = therapists.map((t, idx) => `
+    <div class="tcard ${idx===0 ? 'top' : ''}" style="margin-bottom:12px;">
+      <div class="tcard-head"><div class="tcard-name">${t.name}</div><div class="badge">推薦</div></div>
+      <div class="tags">${t.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${tag}</span>`).join('')}</div>
+      <div class="slots">
+        ${t.available_slots.length
+          ? t.available_slots.map(s=> s.is_booked
+              ? `<div class="slot full">${s.date.slice(5).replace('-','/')} ${s.time} 額滿</div>`
+              : `<div class="slot" data-t="${t.name}" data-tid="${t.therapist_id}" data-sid="${s.schedule_id}" data-date="${s.date}" data-time="${s.time}" onclick="pickSlot(this)">${s.date.slice(5).replace('-','/')} ${s.time}</div>`
+            ).join('')
+          : '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function submitBooking(){
+  if(!selectedSlot){ alert('請先選擇時段'); return; }
+  const btn = document.getElementById('confirm-btn');
+  btn.disabled = true;
+  btn.textContent = '預約中...';
+
+  Promise.resolve(patientReadyPromise)
+    .then(() => {
+      if(!currentPatientId) throw new Error('病人資料尚未建立完成，請稍後再試');
+      return fetch(API_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'createAppointment',
+          patientId: currentPatientId,
+          therapistId: selectedSlot.therapistId,
+          scheduleId: selectedSlot.scheduleId,
+          date: selectedSlot.date,
+          time: selectedSlot.time
+        })
+      });
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data.error) throw new Error(data.error);
+      document.getElementById('line-msg').innerHTML = '陳先生您好<br>您的初診評估已預約成功。';
+      go('confirm');
+      btn.textContent = '確認預約';
+      btn.disabled = false;
+    })
+    .catch(err => {
+      alert('預約失敗：' + err.message);
+      btn.textContent = '確認預約';
+      btn.disabled = false;
+    });
+}
+
+// body part multi-select via body diagram（可複選，match API 會逗號分隔一起比對）
+let selectedBodyTags = new Set();
+document.querySelectorAll('.bd-zone').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    const tag = el.dataset.tag;
+    if(selectedBodyTags.has(tag)){
+      selectedBodyTags.delete(tag);
+    } else {
+      selectedBodyTags.add(tag);
+    }
+    document.querySelectorAll('.bd-zone').forEach(z=>{
+      z.classList.toggle('selected', selectedBodyTags.has(z.dataset.tag));
+    });
+    document.getElementById('body-selected-label').textContent = selectedBodyTags.size
+      ? '已選擇：' + Array.from(selectedBodyTags).join('、')
+      : '請點選人體圖上的不適部位（可複選）';
+  });
+});
+
+function setBodyView(view){
+  document.querySelectorAll('.vtbtn').forEach(b=> b.classList.toggle('active', b.dataset.view===view));
+  document.getElementById('body-front').classList.toggle('active', view==='front');
+  document.getElementById('body-back').classList.toggle('active', view==='back');
+}
+
+// slot selection
+let selectedSlot = null;
+function pickSlot(el){
+  document.querySelectorAll('.slot').forEach(s=>{ if(!s.classList.contains('full')) s.classList.remove('selected'); });
+  el.classList.add('selected');
+  document.getElementById('confirm-btn').disabled = false;
+  selectedSlot = {
+    therapistName: el.dataset.t,
+    therapistId: el.dataset.tid,
+    scheduleId: el.dataset.sid,
+    date: el.dataset.date,
+    time: el.dataset.time
+  };
+  document.getElementById('line-date').textContent = el.dataset.date ? el.dataset.date.slice(5).replace('-','/') : '';
+  document.getElementById('line-time').textContent = el.dataset.time || '';
+  document.getElementById('line-t').textContent = el.dataset.t;
+}
+
+// timer (dead demo: fixed 45s countdown)
+let timerInterval = null;
+function startTimer(exName, btnEl){
+  document.getElementById('timerwrap').style.display = 'block';
+  document.getElementById('timerlabel').textContent = exName + ' · 組間休息';
+  let seconds = 45;
+  clearInterval(timerInterval);
+  timerInterval = setInterval(()=>{
+    seconds--;
+    const m = String(Math.floor(seconds/60)).padStart(2,'0');
+    const s = String(seconds%60).padStart(2,'0');
+    document.getElementById('timernum').textContent = m+':'+s;
+    if(seconds<=0){
+      clearInterval(timerInterval);
+      btnEl.closest('.exitem').classList.add('done');
+      btnEl.outerHTML = '<span class="exdone-badge">已完成 ✓</span>';
+      document.getElementById('timerwrap').style.display='none';
+      checkAllExercisesDone();
+    }
+  },1000);
+}
+
+function checkAllExercisesDone(){
+  const total = document.querySelectorAll('#exlist .exitem').length;
+  const done = document.querySelectorAll('#exlist .exitem.done').length;
+  if(done >= total){
+    const mascot = document.getElementById('mascot-done');
+    mascot.style.display = 'flex';
+    mascot.classList.add('mascot-pop');
+  }
+}
+
+function toggleSwitch(el){
+  el.classList.toggle('on');
+  const isOn = el.classList.contains('on');
+  document.querySelectorAll('.exguide').forEach(g => g.classList.toggle('show', isOn));
+}
+
+// ---------- 舊客複診 ----------
+let followupPatientId = null;
+let followupSlot = null;
+
+function lookupFollowup(){
+  const phone = document.getElementById('followup-phone').value.trim();
+  const resultEl = document.getElementById('followup-result');
+  if(!phone){ alert('請輸入聯絡方式'); return; }
+  resultEl.innerHTML = '<div class="tcard" style="text-align:center; color:var(--muted);"><div class="spinner"></div>查詢中...</div>';
+
+  fetch(`${API_BASE}?action=followupInfo&phone=${encodeURIComponent(phone)}`)
+    .then(res => res.json())
+    .then(data => {
+      if(data.error) throw new Error(data.error);
+      renderFollowup(data);
+    })
+    .catch(err => {
+      resultEl.innerHTML = `<div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        <div class="empty-title">${err.message}</div>
+      </div>`;
+    });
+}
+
+function renderFollowup(data){
+  followupPatientId = data.patient_id;
+  const resultEl = document.getElementById('followup-result');
+  resultEl.innerHTML = `
+    <div class="tcard top">
+      <div class="tcard-head">
+        <div class="tcard-name">${data.therapist_name}</div>
+        <div class="badge">您的治療師</div>
+      </div>
+      <div class="tags">${data.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${tag}</span>`).join('')}</div>
+      <div style="font-size:11px; color:var(--muted); margin-bottom:10px;">上次看診：${data.last_visit_date.slice(5).replace('-','/')}</div>
+      <div class="slots">
+        ${data.available_slots.length ? data.available_slots.map(s => s.is_booked
+            ? `<div class="slot full">${s.date.slice(5).replace('-','/')} ${s.time} 額滿</div>`
+            : `<div class="slot" data-tid="${data.therapist_id}" data-sid="${s.schedule_id}" data-date="${s.date}" data-time="${s.time}" onclick="pickFollowupSlot(this)">${s.date.slice(5).replace('-','/')} ${s.time}</div>`
+          ).join('') : '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>'}
+      </div>
+    </div>
+    <button class="btn-block" id="followup-confirm-btn" onclick="submitFollowupBooking()" disabled>確認複診預約</button>
+    <button class="btn-ghost" onclick="showOtherTherapists()" style="margin-top:2px;">想更換治療師？查看其他治療師</button>
+    <div id="other-therapists-result" style="display:flex; flex-direction:column; gap:12px;"></div>
+  `;
+}
+
+function showOtherTherapists(){
+  const container = document.getElementById('other-therapists-result');
+  container.innerHTML = '<div class="tcard" style="text-align:center; color:var(--muted);"><div class="spinner"></div>載入中...</div>';
+
+  fetch(`${API_BASE}?action=allTherapists`)
+    .then(res => res.json())
+    .then(data => {
+      if(data.error) throw new Error(data.error);
+      container.innerHTML = data.map(t => `
+        <div class="tcard">
+          <div class="tcard-head"><div class="tcard-name">${t.name}</div></div>
+          <div class="tags">${t.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${tag}</span>`).join('')}</div>
+          <div class="slots">
+            ${t.available_slots.length ? t.available_slots.map(s => s.is_booked
+                ? `<div class="slot full">${s.date.slice(5).replace('-','/')} ${s.time} 額滿</div>`
+                : `<div class="slot" data-tid="${t.therapist_id}" data-sid="${s.schedule_id}" data-date="${s.date}" data-time="${s.time}" onclick="pickFollowupSlot(this)">${s.date.slice(5).replace('-','/')} ${s.time}</div>`
+              ).join('') : '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>'}
+          </div>
+        </div>
+      `).join('');
+    })
+    .catch(err => {
+      container.innerHTML = `<div class="tcard" style="text-align:center; color:var(--danger);">載入失敗：${err.message}</div>`;
+    });
+}
+
+function pickFollowupSlot(el){
+  document.querySelectorAll('#followup-result .slot, #other-therapists-result .slot').forEach(s=>{ if(!s.classList.contains('full')) s.classList.remove('selected'); });
+  el.classList.add('selected');
+  followupSlot = {
+    therapistId: el.dataset.tid,
+    scheduleId: el.dataset.sid,
+    date: el.dataset.date,
+    time: el.dataset.time
+  };
+  document.getElementById('followup-confirm-btn').disabled = false;
+}
+
+function submitFollowupBooking(){
+  if(!followupSlot){ alert('請先選擇時段'); return; }
+  const btn = document.getElementById('followup-confirm-btn');
+  btn.disabled = true;
+  btn.textContent = '預約中...';
+
+  fetch(API_BASE, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({
+      action: 'createAppointment',
+      patientId: followupPatientId,
+      therapistId: followupSlot.therapistId,
+      scheduleId: followupSlot.scheduleId,
+      date: followupSlot.date,
+      time: followupSlot.time
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if(data.error) throw new Error(data.error);
+      document.getElementById('line-date').textContent = followupSlot.date.slice(5).replace('-','/');
+      document.getElementById('line-time').textContent = followupSlot.time;
+      document.getElementById('line-t').textContent = document.querySelector('#followup-result .tcard-name').textContent;
+      document.getElementById('line-msg').innerHTML = '陳先生您好<br>您的複診已預約成功。';
+      go('confirm');
+      btn.textContent = '確認複診預約';
+      btn.disabled = false;
+    })
+    .catch(err => {
+      alert('預約失敗：' + err.message);
+      btn.textContent = '確認複診預約';
+      btn.disabled = false;
+    });
+}
+
+// ---------- 查詢／取消預約 ----------
+function lookupAppointments(){
+  const phone = document.getElementById('lookup-phone').value.trim();
+  const listEl = document.getElementById('appt-list');
+  if(!phone){ alert('請輸入聯絡方式'); return; }
+  listEl.innerHTML = '<div class="tcard" style="text-align:center; color:var(--muted);"><div class="spinner"></div>查詢中...</div>';
+
+  fetch(`${API_BASE}?action=myAppointments&phone=${encodeURIComponent(phone)}`)
+    .then(res => res.json())
+    .then(data => {
+      if(data.error) throw new Error(data.error);
+      renderAppointments(data);
+    })
+    .catch(err => {
+      listEl.innerHTML = `<div class="tcard" style="text-align:center; color:var(--danger);">查詢失敗：${err.message}</div>`;
+    });
+}
+
+function renderAppointments(list){
+  const listEl = document.getElementById('appt-list');
+  if(!list.length){
+    listEl.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.6"><rect x="4" y="5" width="16" height="16" rx="2"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>
+      <div class="empty-title">查無預約紀錄</div>
+      <div class="empty-sub">請確認手機號碼是否與預約時填寫的一致</div>
+    </div>`;
+    return;
+  }
+  const sorted = [...list].sort((a, b) => {
+    const aCancelled = a.status === 'cancelled' ? 1 : 0;
+    const bCancelled = b.status === 'cancelled' ? 1 : 0;
+    if(aCancelled !== bCancelled) return aCancelled - bCancelled;
+    return (a.date + a.time).localeCompare(b.date + b.time);
+  });
+  listEl.innerHTML = sorted.map(a => `
+    <div class="tcard">
+      <div class="tcard-head">
+        <div class="tcard-name">${a.date.slice(5).replace('-','/')} ${a.time}　${a.therapist_name}</div>
+        <div class="badge" style="${a.status==='cancelled' ? 'background:#F2F0EA;color:var(--muted);' : ''}">${a.status==='cancelled' ? '已取消' : '已確認'}</div>
+      </div>
+      ${a.status!=='cancelled' ? `<button class="btn-ghost" style="margin-top:10px; width:100%;" onclick="cancelAppt('${a.appointment_id}')">取消這筆預約</button>` : ''}
+    </div>
+  `).join('');
+}
+
+function cancelAppt(appointmentId){
+  if(!confirm('確定要取消這筆預約嗎？')) return;
+  fetch(API_BASE, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: 'cancelAppointment', appointmentId })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if(data.error) throw new Error(data.error);
+      lookupAppointments();
+    })
+    .catch(err => alert('取消失敗：' + err.message));
+}
+
+// ---------- 浮動豆芽：可拖曳 + 點擊變換鼓勵語 ----------
+(function(){
+  const floatEl = document.getElementById('home-mascot-float');
+  const icon = floatEl.querySelector('.mascot-float-icon');
+  const bubble = document.getElementById('home-mascot-msg');
+  const phone = document.querySelector('.phone');
+
+  const messages = [
+    '豆芽在這裡陪你一起完成復健，加油！',
+    '記得每天做一點點，比一次做很多更有效喔',
+    '今天感覺怎麼樣？別忘了記錄疼痛分數',
+    '休息也是復健的一部分，別太勉強自己',
+    '你已經做得很好了，繼續保持！',
+    '你可以拖著我到你喜歡的位置喔'
+  ];
+
+  let dragging = false, moved = false, startX, startY, startLeft, startTop;
+
+  function pinToLeftTop(){
+    const rect = floatEl.getBoundingClientRect();
+    const pRect = phone.getBoundingClientRect();
+    floatEl.style.left = (rect.left - pRect.left) + 'px';
+    floatEl.style.top = (rect.top - pRect.top) + 'px';
+    floatEl.style.right = 'auto';
+    floatEl.style.bottom = 'auto';
+  }
+
+  function onDown(e){
+    dragging = true; moved = false;
+    const p = e.touches ? e.touches[0] : e;
+    startX = p.clientX; startY = p.clientY;
+    pinToLeftTop();
+    startLeft = parseFloat(floatEl.style.left);
+    startTop = parseFloat(floatEl.style.top);
+    e.preventDefault();
+  }
+  function onMove(e){
+    if(!dragging) return;
+    const p = e.touches ? e.touches[0] : e;
+    const dx = p.clientX - startX, dy = p.clientY - startY;
+    if(Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+    const pRect = phone.getBoundingClientRect();
+    const maxLeft = pRect.width - floatEl.offsetWidth;
+    const maxTop = pRect.height - floatEl.offsetHeight;
+    floatEl.style.left = Math.max(0, Math.min(startLeft + dx, maxLeft)) + 'px';
+    floatEl.style.top = Math.max(0, Math.min(startTop + dy, maxTop)) + 'px';
+  }
+  function onUp(){
+    if(dragging && !moved){
+      const next = messages[Math.floor(Math.random() * messages.length)];
+      bubble.textContent = next;
+      bubble.classList.remove('mascot-pop');
+      void bubble.offsetWidth;
+      bubble.classList.add('mascot-pop');
+    }
+    dragging = false;
+  }
+
+  icon.addEventListener('mousedown', onDown);
+  icon.addEventListener('touchstart', onDown, { passive: false });
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('mouseup', onUp);
+  window.addEventListener('touchend', onUp);
+})();
+
+function setMode(mode){
+  document.getElementById('mode-new').classList.toggle('active', mode==='new');
+  document.getElementById('mode-return').classList.toggle('active', mode==='return');
+  if(mode==='new'){
+    document.getElementById('home-hello').textContent = '陳先生，您好';
+    document.getElementById('home-headline').textContent = '讓復健，不只發生在診所裡';
+    document.getElementById('home-foot').textContent = '已透過 LINE 辨識您的身份，免登入、免輸入密碼。';
+    document.getElementById('home-mascot-msg').textContent = '豆芽在這裡陪你一起完成復健，加油！';
+  } else {
+    document.getElementById('home-hello').textContent = '陳先生，好久不見';
+    document.getElementById('home-headline').textContent = '今天也一起完成復健吧';
+    document.getElementById('home-foot').textContent = '距離初診已滿3週，本週已連續完成 5 天居家復健。';
+    document.getElementById('home-mascot-msg').textContent = '豆芽說：你已經連續完成好幾天了，是我看過最認真的病人之一！';
+  }
+  go('home');
+}
+</script>
+</body>
+</html>
