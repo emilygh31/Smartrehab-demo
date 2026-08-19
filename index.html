@@ -8,14 +8,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#F6F4EE;
+    --bg:#F3F1E6;
     --surface:#FFFFFF;
     --ink:#232A28;
     --muted:#7C8983;
-    --primary:#1F5F52;
-    --primary-light:#E7EFE9;
-    --accent:#E2924B;
-    --line:#DDD8CC;
+    --primary:#276189;
+    --primary-light:#DCEEED;
+    --accent:#F0DD77;
+    --accent-text:#8A7420;
+    --line:#DAD8C7;
     --danger:#C4573F;
     --radius:18px;
     --radius-sm:10px;
@@ -102,15 +103,15 @@
   button{ transition:transform .12s ease, box-shadow .12s ease, background .12s ease, opacity .12s ease; }
   button:active{ transform:scale(0.97); }
   .cta-primary, .cta-secondary, .btn-block{
-    box-shadow:0 6px 16px -8px rgba(31,95,82,0.45);
+    box-shadow:0 6px 16px -8px rgba(39,97,137,0.45);
   }
-  .cta-primary:hover, .btn-block:hover{ box-shadow:0 8px 20px -6px rgba(31,95,82,0.55); }
-  .cta-secondary:hover{ background:#DCEBE2; }
+  .cta-primary:hover, .btn-block:hover{ box-shadow:0 8px 20px -6px rgba(39,97,137,0.55); }
+  .cta-secondary:hover{ background:#C7E5E2; }
   .slot, .bodytag, .tcard, .startbtn{ transition:transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease; }
-  .slot:hover:not(.full):not(.selected){ border-color:var(--primary); box-shadow:0 4px 10px -6px rgba(31,95,82,0.3); }
+  .slot:hover:not(.full):not(.selected){ border-color:var(--primary); box-shadow:0 4px 10px -6px rgba(39,97,137,0.3); }
   .slot:active:not(.full){ transform:scale(0.96); }
   .tcard{ box-shadow:0 3px 14px -10px rgba(35,42,40,0.25); }
-  .tcard.top{ box-shadow:0 8px 22px -12px rgba(31,95,82,0.4); }
+  .tcard.top{ box-shadow:0 8px 22px -12px rgba(39,97,137,0.4); }
 
   .spinner{
     width:22px; height:22px; border-radius:50%;
@@ -195,7 +196,7 @@
     width:100%; min-height:64px; padding:12px 14px; border-radius:var(--radius-sm);
     border:1px solid var(--line); font-family:'IBM Plex Sans',sans-serif; font-size:14px; resize:none;
   }
-  .step-eyebrow{font-size:11px; letter-spacing:0.1em; color:var(--accent); font-weight:600; text-transform:uppercase;}
+  .step-eyebrow{font-size:11px; letter-spacing:0.1em; color:var(--accent-text); font-weight:600; text-transform:uppercase;}
 
   /* ---------- THERAPIST MATCH ---------- */
   .tcard{
@@ -216,7 +217,7 @@
     cursor:pointer; background:var(--surface);
   }
   .slot.selected{background:var(--primary); color:#fff; border-color:var(--primary);}
-  .slot.full{color:var(--muted); text-decoration:line-through; cursor:not-allowed; background:#F2F0EA;}
+  .slot.full{color:var(--muted); text-decoration:line-through; cursor:not-allowed; background:var(--line);}
 
   /* ---------- CONFIRM / LINE bubble ---------- */
   .confirm-check{
@@ -271,7 +272,7 @@
   }
   @keyframes pulseBg{
     0%,100%{ background:var(--primary-light); }
-    50%{ background:#DCEBE2; }
+    50%{ background:#C7E5E2; }
   }
   .timernum{font-family:'Fraunces',serif; font-size:44px; color:var(--primary);}
   .timerlabel{font-size:12px; color:var(--muted); margin-top:4px;}
@@ -282,7 +283,7 @@
   .switch.on .knob{left:18px;}
 
   /* ---------- VAS ---------- */
-  .vas-num{font-family:'Fraunces',serif; font-size:48px; text-align:center; color:var(--accent); transition:color .15s;}
+  .vas-num{font-family:'Fraunces',serif; font-size:48px; text-align:center; color:var(--accent-text); transition:color .15s;}
   .vas-sub{text-align:center; font-size:12px; color:var(--muted); margin-top:-12px;}
   input[type=range]{
     -webkit-appearance:none; appearance:none;
@@ -294,14 +295,14 @@
     -webkit-appearance:none; appearance:none;
     width:24px; height:24px; border-radius:50%;
     background:#fff; border:3px solid var(--accent);
-    box-shadow:0 3px 8px rgba(226,146,75,0.4);
+    box-shadow:0 3px 8px rgba(240,221,119,0.4);
     cursor:pointer; transition:transform .12s;
   }
   input[type=range]::-webkit-slider-thumb:active{ transform:scale(1.15); }
   input[type=range]::-moz-range-thumb{
     width:24px; height:24px; border-radius:50%;
     background:#fff; border:3px solid var(--accent);
-    box-shadow:0 3px 8px rgba(226,146,75,0.4); cursor:pointer;
+    box-shadow:0 3px 8px rgba(240,221,119,0.4); cursor:pointer;
   }
   .vas-scale{display:flex; justify-content:space-between; font-size:11px; color:var(--muted);}
 
@@ -324,11 +325,13 @@
   .trend-axis{stroke:var(--line); stroke-width:1;}
 
   .btn-block{
+    display:block; width:100%; box-sizing:border-box;
     margin-top:auto;
     background:var(--primary); color:#fff; border:none; padding:15px; border-radius:var(--radius-sm);
     font-size:14.5px; font-weight:600; cursor:pointer;
   }
   .btn-ghost{
+    display:block; width:100%; box-sizing:border-box; margin-top:10px;
     background:transparent; color:var(--muted); border:1px solid var(--line); padding:13px; border-radius:var(--radius-sm);
     font-size:13.5px; cursor:pointer;
   }
@@ -377,7 +380,7 @@
     <!-- HOME -->
     <section class="screen active" id="screen-home">
       <div class="brandmark"><div class="dot"></div><span>SmartRehab</span></div>
-      <svg class="hero-line" viewBox="0 0 380 52"><path d="M4 40 C 60 10, 100 46, 150 22 S 250 4, 300 26 S 360 44, 376 18" fill="none" stroke="#1F5F52" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <svg class="hero-line" viewBox="0 0 380 52"><path d="M4 40 C 60 10, 100 46, 150 22 S 250 4, 300 26 S 360 44, 376 18" fill="none" stroke="#276189" stroke-width="2.5" stroke-linecap="round"/></svg>
       <div class="hello" id="home-hello">陳先生，您好</div>
       <h1 class="headline" id="home-headline">讓復健，不只發生在診所裡</h1>
       <button class="cta-primary" id="cta-book" onclick="go('form')">立即預約門診初診評估 <span>→</span></button>
@@ -646,18 +649,18 @@
         <svg class="trendline" viewBox="0 0 320 110">
           <defs>
             <linearGradient id="painGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#1F5F52" stop-opacity="0.22"/>
-              <stop offset="100%" stop-color="#1F5F52" stop-opacity="0"/>
+              <stop offset="0%" stop-color="#276189" stop-opacity="0.22"/>
+              <stop offset="100%" stop-color="#276189" stop-opacity="0"/>
             </linearGradient>
           </defs>
           <line x1="0" y1="90" x2="320" y2="90" class="trend-axis"/>
           <polygon points="10,20 100,35 200,55 310,70 310,90 10,90" fill="url(#painGrad)"/>
-          <polyline points="10,20 100,35 200,55 310,70" fill="none" stroke="#1F5F52" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="10" cy="20" r="4" fill="#1F5F52"/><text x="4" y="12" font-size="11" fill="#7C8983">6</text>
-          <circle cx="100" cy="35" r="4" fill="#1F5F52"/><text x="94" y="27" font-size="11" fill="#7C8983">5</text>
-          <circle cx="200" cy="55" r="4" fill="#1F5F52"/><text x="194" y="47" font-size="11" fill="#7C8983">4</text>
-          <circle cx="310" cy="70" r="7" fill="#fff" stroke="#E2924B" stroke-width="3"/>
-          <text x="296" y="90" font-size="12" fill="#E2924B" font-weight="700">3 分（今天）</text>
+          <polyline points="10,20 100,35 200,55 310,70" fill="none" stroke="#276189" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="10" cy="20" r="4" fill="#276189"/><text x="4" y="12" font-size="11" fill="#7C8983">6</text>
+          <circle cx="100" cy="35" r="4" fill="#276189"/><text x="94" y="27" font-size="11" fill="#7C8983">5</text>
+          <circle cx="200" cy="55" r="4" fill="#276189"/><text x="194" y="47" font-size="11" fill="#7C8983">4</text>
+          <circle cx="310" cy="70" r="7" fill="#fff" stroke="#F0DD77" stroke-width="3"/>
+          <text x="296" y="90" font-size="12" fill="#F0DD77" font-weight="700">3 分（今天）</text>
         </svg>
       </div>
 
@@ -689,6 +692,37 @@ function go(name){
   document.getElementById('screen-'+name).classList.add('active');
   const floatEl = document.getElementById('home-mascot-float');
   if(floatEl) floatEl.style.display = (name === 'home') ? 'flex' : 'none';
+  if(name === 'home'){ resetBookingState(); }
+}
+
+// ---------- 共用工具函式 ----------
+function escapeHtml(str){
+  if(str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function isValidPhone(phone){
+  // 接受常見台灣手機格式，例如 0912345678 或 0912-345-678
+  return /^09\d{2}-?\d{3}-?\d{3}$/.test(phone);
+}
+
+function buildConfirmMessage(kind){
+  return kind === 'followup'
+    ? '陳先生您好<br>您的複診已預約成功。'
+    : '陳先生您好<br>您的初診評估已預約成功。';
+}
+
+function resetBookingState(){
+  currentPatientId = null;
+  patientReadyPromise = null;
+  selectedSlot = null;
+  followupPatientId = null;
+  followupSlot = null;
 }
 
 // ---------- 真實 API 串接（第一段：表單 → 治療師配對）----------
@@ -704,6 +738,7 @@ function submitStep1(){
   const symptomNote = document.getElementById('in-symptom').value;
   if(!name){ alert('請填寫姓名'); return; }
   if(!phone){ alert('請填寫聯絡方式'); return; }
+  if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912-345-678）'); return; }
 
   go('match');
   const loadingEl = document.getElementById('match-loading');
@@ -757,13 +792,13 @@ function renderMatchResults(therapists){
 
   resultsEl.innerHTML = therapists.map((t, idx) => `
     <div class="tcard ${idx===0 ? 'top' : ''}" style="margin-bottom:12px;">
-      <div class="tcard-head"><div class="tcard-name">${t.name}</div><div class="badge">推薦</div></div>
-      <div class="tags">${t.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${tag}</span>`).join('')}</div>
+      <div class="tcard-head"><div class="tcard-name">${escapeHtml(t.name)}</div><div class="badge">推薦</div></div>
+      <div class="tags">${t.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${escapeHtml(tag)}</span>`).join('')}</div>
       <div class="slots">
         ${t.available_slots.length
           ? t.available_slots.map(s=> s.is_booked
-              ? `<div class="slot full">${s.date.slice(5).replace('-','/')} ${s.time} 額滿</div>`
-              : `<div class="slot" data-t="${t.name}" data-tid="${t.therapist_id}" data-sid="${s.schedule_id}" data-date="${s.date}" data-time="${s.time}" onclick="pickSlot(this)">${s.date.slice(5).replace('-','/')} ${s.time}</div>`
+              ? `<div class="slot full">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)} 額滿</div>`
+              : `<div class="slot" data-t="${escapeHtml(t.name)}" data-tid="${escapeHtml(t.therapist_id)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
             ).join('')
           : '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>'}
       </div>
@@ -796,7 +831,7 @@ function submitBooking(){
     .then(res => res.json())
     .then(data => {
       if(data.error) throw new Error(data.error);
-      document.getElementById('line-msg').innerHTML = '陳先生您好<br>您的初診評估已預約成功。';
+      document.getElementById('line-msg').innerHTML = buildConfirmMessage('new');
       go('confirm');
       btn.textContent = '確認預約';
       btn.disabled = false;
@@ -897,6 +932,7 @@ function lookupFollowup(){
   const phone = document.getElementById('followup-phone').value.trim();
   const resultEl = document.getElementById('followup-result');
   if(!phone){ alert('請輸入聯絡方式'); return; }
+  if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912-345-678）'); return; }
   resultEl.innerHTML = '<div class="tcard" style="text-align:center; color:var(--muted);"><div class="spinner"></div>查詢中...</div>';
 
   fetch(`${API_BASE}?action=followupInfo&phone=${encodeURIComponent(phone)}`)
@@ -919,20 +955,20 @@ function renderFollowup(data){
   resultEl.innerHTML = `
     <div class="tcard top">
       <div class="tcard-head">
-        <div class="tcard-name">${data.therapist_name}</div>
+        <div class="tcard-name">${escapeHtml(data.therapist_name)}</div>
         <div class="badge">您的治療師</div>
       </div>
-      <div class="tags">${data.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${tag}</span>`).join('')}</div>
-      <div style="font-size:11px; color:var(--muted); margin-bottom:10px;">上次看診：${data.last_visit_date.slice(5).replace('-','/')}</div>
+      <div class="tags">${data.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${escapeHtml(tag)}</span>`).join('')}</div>
+      <div style="font-size:11px; color:var(--muted); margin-bottom:10px;">上次看診：${escapeHtml(data.last_visit_date.slice(5).replace('-','/'))}</div>
       <div class="slots">
         ${data.available_slots.length ? data.available_slots.map(s => s.is_booked
-            ? `<div class="slot full">${s.date.slice(5).replace('-','/')} ${s.time} 額滿</div>`
-            : `<div class="slot" data-tid="${data.therapist_id}" data-sid="${s.schedule_id}" data-date="${s.date}" data-time="${s.time}" onclick="pickFollowupSlot(this)">${s.date.slice(5).replace('-','/')} ${s.time}</div>`
+            ? `<div class="slot full">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)} 額滿</div>`
+            : `<div class="slot" data-tid="${escapeHtml(data.therapist_id)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickFollowupSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
           ).join('') : '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>'}
       </div>
     </div>
     <button class="btn-block" id="followup-confirm-btn" onclick="submitFollowupBooking()" disabled>確認複診預約</button>
-    <button class="btn-ghost" onclick="showOtherTherapists()" style="margin-top:2px;">想更換治療師？查看其他治療師</button>
+    <button class="btn-ghost" onclick="showOtherTherapists()">想更換治療師？查看其他治療師</button>
     <div id="other-therapists-result" style="display:flex; flex-direction:column; gap:12px;"></div>
   `;
 }
@@ -947,12 +983,12 @@ function showOtherTherapists(){
       if(data.error) throw new Error(data.error);
       container.innerHTML = data.map(t => `
         <div class="tcard">
-          <div class="tcard-head"><div class="tcard-name">${t.name}</div></div>
-          <div class="tags">${t.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${tag}</span>`).join('')}</div>
+          <div class="tcard-head"><div class="tcard-name">${escapeHtml(t.name)}</div></div>
+          <div class="tags">${t.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${escapeHtml(tag)}</span>`).join('')}</div>
           <div class="slots">
             ${t.available_slots.length ? t.available_slots.map(s => s.is_booked
-                ? `<div class="slot full">${s.date.slice(5).replace('-','/')} ${s.time} 額滿</div>`
-                : `<div class="slot" data-tid="${t.therapist_id}" data-sid="${s.schedule_id}" data-date="${s.date}" data-time="${s.time}" onclick="pickFollowupSlot(this)">${s.date.slice(5).replace('-','/')} ${s.time}</div>`
+                ? `<div class="slot full">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)} 額滿</div>`
+                : `<div class="slot" data-tid="${escapeHtml(t.therapist_id)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickFollowupSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
               ).join('') : '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>'}
           </div>
         </div>
@@ -999,7 +1035,7 @@ function submitFollowupBooking(){
       document.getElementById('line-date').textContent = followupSlot.date.slice(5).replace('-','/');
       document.getElementById('line-time').textContent = followupSlot.time;
       document.getElementById('line-t').textContent = document.querySelector('#followup-result .tcard-name').textContent;
-      document.getElementById('line-msg').innerHTML = '陳先生您好<br>您的複診已預約成功。';
+      document.getElementById('line-msg').innerHTML = buildConfirmMessage('followup');
       go('confirm');
       btn.textContent = '確認複診預約';
       btn.disabled = false;
@@ -1016,6 +1052,7 @@ function lookupAppointments(){
   const phone = document.getElementById('lookup-phone').value.trim();
   const listEl = document.getElementById('appt-list');
   if(!phone){ alert('請輸入聯絡方式'); return; }
+  if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912-345-678）'); return; }
   listEl.innerHTML = '<div class="tcard" style="text-align:center; color:var(--muted);"><div class="spinner"></div>查詢中...</div>';
 
   fetch(`${API_BASE}?action=myAppointments&phone=${encodeURIComponent(phone)}`)
@@ -1048,10 +1085,10 @@ function renderAppointments(list){
   listEl.innerHTML = sorted.map(a => `
     <div class="tcard">
       <div class="tcard-head">
-        <div class="tcard-name">${a.date.slice(5).replace('-','/')} ${a.time}　${a.therapist_name}</div>
-        <div class="badge" style="${a.status==='cancelled' ? 'background:#F2F0EA;color:var(--muted);' : ''}">${a.status==='cancelled' ? '已取消' : '已確認'}</div>
+        <div class="tcard-name">${escapeHtml(a.date.slice(5).replace('-','/'))} ${escapeHtml(a.time)}　${escapeHtml(a.therapist_name)}</div>
+        <div class="badge" style="${a.status==='cancelled' ? 'background:var(--line);color:var(--muted);' : ''}">${a.status==='cancelled' ? '已取消' : '已確認'}</div>
       </div>
-      ${a.status!=='cancelled' ? `<button class="btn-ghost" style="margin-top:10px; width:100%;" onclick="cancelAppt('${a.appointment_id}')">取消這筆預約</button>` : ''}
+      ${a.status!=='cancelled' ? `<button class="btn-ghost" style="margin-top:10px; width:100%;" onclick="cancelAppt('${escapeHtml(a.appointment_id)}')">取消這筆預約</button>` : ''}
     </div>
   `).join('');
 }
