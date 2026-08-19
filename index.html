@@ -91,6 +91,7 @@
     gap:18px;
     opacity:0;
     transform:translateX(14px);
+    position:relative;
   }
   .screen.active{
     display:flex;
@@ -126,7 +127,10 @@
   }
   .brandmark .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);}
   .brandmark span{font-size:12px; letter-spacing:0.12em; color:var(--muted); text-transform:uppercase;}
-  .hero-line{width:100%; height:52px;}
+  .hero-line{
+    position:absolute; top:8px; left:20px; right:20px; width:auto; height:150px;
+    z-index:-1; opacity:0.3; pointer-events:none;
+  }
   .hero-line path{ stroke-dasharray:400; stroke-dashoffset:400; animation:drawLine 1.4s ease forwards .1s; }
   @keyframes drawLine{ to{ stroke-dashoffset:0; } }
   .hello{font-size:14px; color:var(--muted); margin-top:6px;}
@@ -240,6 +244,8 @@
   .line-detail{display:flex; gap:8px; align-items:center; margin-top:4px; font-size:13px;}
 
   /* ---------- REHAB ---------- */
+  #rehab-content{display:flex; flex-direction:column; gap:18px;}
+  #followup-form-content{display:flex; flex-direction:column; gap:18px;}
   .exlist{display:flex; flex-direction:column; gap:10px;}
   .exitem-wrap{border:1px solid var(--line); border-radius:var(--radius-sm); overflow:hidden; background:var(--surface);}
   .exitem{
@@ -267,15 +273,15 @@
   .gd-floor{stroke:var(--line); stroke-width:2; stroke-linecap:round;}
   .gd-shape{fill:var(--primary); stroke:none;}
   .timerwrap{
-    text-align:center; padding:26px 0; border:1px solid var(--line); border-radius:var(--radius); background:var(--primary-light);
-    animation:pulseBg 2s ease-in-out infinite;
+    text-align:center; padding:20px 0; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface);
+    cursor:pointer;
   }
-  @keyframes pulseBg{
-    0%,100%{ background:var(--primary-light); }
-    50%{ background:#C7E5E2; }
-  }
-  .timernum{font-family:'Fraunces',serif; font-size:44px; color:var(--primary);}
-  .timerlabel{font-size:12px; color:var(--muted); margin-top:4px;}
+  .timer-ring{ transform:rotate(-90deg); }
+  .timer-ring-track{ fill:none; stroke:var(--primary-light); stroke-width:8; }
+  .timer-ring-fill{ fill:none; stroke:var(--primary); stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset 1s linear; }
+  .timernum{font-family:'Fraunces',serif; font-size:26px; color:var(--primary); font-weight:600;}
+  .timerlabel{font-size:12px; color:var(--muted); margin-top:8px;}
+  .timerskip{font-size:11px; color:var(--muted); margin-top:2px; text-decoration:underline;}
   .toggle-row{display:flex; align-items:center; justify-content:space-between; font-size:13px; margin-top:10px;}
   .switch{width:38px;height:22px;border-radius:999px;background:var(--line); position:relative; cursor:pointer;}
   .switch.on{background:var(--primary);}
@@ -331,10 +337,12 @@
     font-size:14.5px; font-weight:600; cursor:pointer;
   }
   .btn-ghost{
-    display:block; width:100%; box-sizing:border-box; margin-top:10px;
+    display:block; width:100%; box-sizing:border-box; margin-top:14px;
     background:transparent; color:var(--muted); border:1px solid var(--line); padding:13px; border-radius:var(--radius-sm);
     font-size:13.5px; cursor:pointer;
   }
+
+  .button-group{display:flex; flex-direction:column; gap:12px; margin-top:16px;}
 
   .empty-state{
     text-align:center; padding:34px 20px; border:1px dashed var(--line); border-radius:var(--radius);
@@ -353,18 +361,23 @@
   .mascot-pop{ animation:mascotPop .4s cubic-bezier(.34,1.4,.64,1); }
   @keyframes mascotPop{ 0%{ transform:scale(0.6); opacity:0; } 100%{ transform:scale(1); opacity:1; } }
 
-  .mascot-float{
-    position:absolute; right:14px; bottom:74px; z-index:6;
-    display:flex; align-items:flex-end; gap:8px;
+  .exdone-badge{ display:inline-block; animation:checkPop .45s cubic-bezier(.34,1.5,.64,1); }
+  @keyframes checkPop{ 0%{ transform:scale(0.3); opacity:0; } 60%{ transform:scale(1.2); opacity:1; } 100%{ transform:scale(1); } }
+  .exitem-wrap.just-done{ animation:flashDone 1s ease-out; }
+  @keyframes flashDone{ 0%{ background:var(--primary-light); } 100%{ background:transparent; } }
+  .celebrate-ring{
+    position:fixed; left:50%; top:50%; width:20px; height:20px; margin:-10px 0 0 -10px;
+    border-radius:50%; border:3px solid var(--accent); pointer-events:none; z-index:50;
+    animation:ringBurst .7s ease-out forwards;
   }
-  .mascot-float-icon{width:46px; height:46px; flex:none; filter:drop-shadow(0 4px 10px rgba(35,42,40,0.18)); cursor:grab; touch-action:none;}
-  .mascot-float-icon:active{cursor:grabbing;}
-  .mascot-bubble{
-    background:var(--surface); border:1px solid var(--line); border-radius:14px 14px 3px 14px;
-    padding:9px 12px; font-size:11.5px; color:var(--ink); line-height:1.4; max-width:150px;
-    box-shadow:0 6px 16px -8px rgba(35,42,40,0.25);
-    animation:mascotPop .4s cubic-bezier(.34,1.4,.64,1);
-  }
+  @keyframes ringBurst{ 0%{ transform:scale(0.5); opacity:0.9; } 100%{ transform:scale(14); opacity:0; } }
+
+  .heatmap{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:10px;}
+  .heat-cell{aspect-ratio:1; border-radius:4px; background:var(--line); transition:transform .15s;}
+  .heat-cell.done{background:var(--primary);}
+  .heat-cell.today{outline:2px solid var(--accent); outline-offset:1px;}
+
+
 </style>
 </head>
 <body>
@@ -380,7 +393,7 @@
     <!-- HOME -->
     <section class="screen active" id="screen-home">
       <div class="brandmark"><div class="dot"></div><span>SmartRehab</span></div>
-      <svg class="hero-line" viewBox="0 0 380 52"><path d="M4 40 C 60 10, 100 46, 150 22 S 250 4, 300 26 S 360 44, 376 18" fill="none" stroke="#276189" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <svg class="hero-line" viewBox="0 0 380 150" aria-hidden="true"><path d="M4 60 C 60 10, 100 100, 150 50 S 250 10, 300 70 S 360 110, 376 40" fill="none" stroke="#276189" stroke-width="2.5" stroke-linecap="round"/></svg>
       <div class="hello" id="home-hello">陳先生，您好</div>
       <h1 class="headline" id="home-headline">讓復健，不只發生在診所裡</h1>
       <button class="cta-primary" id="cta-book" onclick="go('form')">立即預約門診初診評估 <span>→</span></button>
@@ -390,19 +403,6 @@
 
       <div class="homefoot" id="home-foot">已透過 LINE 辨識您的身份，免登入、免輸入密碼。</div>
     </section>
-
-    <div class="mascot-float" id="home-mascot-float">
-      <div class="mascot-bubble" id="home-mascot-msg">豆芽在這裡陪你一起完成復健，加油！</div>
-      <svg viewBox="0 0 60 60" class="mascot-float-icon">
-        <circle cx="30" cy="30" r="29" fill="var(--surface)" stroke="var(--primary-light)" stroke-width="2"/>
-        <path d="M30 42 C30 30 30 24 30 19" stroke="var(--primary)" stroke-width="2.6" stroke-linecap="round" fill="none"/>
-        <path d="M30 25 C25 22 20 24 18 19 C25 18 29 21 30 25Z" fill="var(--primary)"/>
-        <path d="M30 22 C35 19 40 21 42 16 C35 15 31 18 30 22Z" fill="var(--accent)"/>
-        <circle cx="30" cy="39" r="9.5" fill="var(--surface)" stroke="var(--primary)" stroke-width="2.2"/>
-        <circle cx="26.5" cy="38" r="1.4" fill="var(--ink)"/><circle cx="33.5" cy="38" r="1.4" fill="var(--ink)"/>
-        <path d="M26 41.5 Q30 44.5 34 41.5" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-      </svg>
-    </div>
 
     <!-- STEP1 FORM -->
     <section class="screen" id="screen-form">
@@ -519,71 +519,30 @@
       <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="title">居家復健</div></div>
       <div class="hello">今日自主復健清單</div>
 
-      <div class="exlist" id="exlist">
-        <div class="exitem-wrap">
-          <div class="exitem" data-ex="橋式">
-            <div><div class="exname">① 橋式</div><div class="exmeta">3 組 × 10 次</div></div>
-            <button class="startbtn" onclick="startTimer('橋式', this)">開始</button>
-          </div>
-          <div class="exguide">
-            <svg viewBox="0 0 120 72"><line x1="4" y1="64" x2="116" y2="64" class="gd-floor"/>
-              <circle cx="18" cy="48" r="10" class="gd-shape"/>
-              <path d="M24 58 L56 28 L82 40 L98 60" class="gd-line" fill="none"/>
-            </svg>
-            <span>躺姿，雙膝彎曲，臀部向上抬起成橋形</span>
-          </div>
-        </div>
-
-        <div class="exitem-wrap">
-          <div class="exitem" data-ex="貓牛式">
-            <div><div class="exname">② 貓牛式</div><div class="exmeta">2 組 × 8 次</div></div>
-            <button class="startbtn" onclick="startTimer('貓牛式', this)">開始</button>
-          </div>
-          <div class="exguide">
-            <svg viewBox="0 0 120 72"><line x1="4" y1="65" x2="116" y2="65" class="gd-floor"/>
-              <line x1="28" y1="24" x2="28" y2="60" class="gd-line"/>
-              <line x1="92" y1="24" x2="92" y2="60" class="gd-line"/>
-              <path d="M28 24 Q60 6 92 24" class="gd-line" fill="none"/>
-              <circle cx="22" cy="19" r="10" class="gd-shape"/>
-            </svg>
-            <span>四足跪姿，脊椎緩慢一拱一塌，感受背部伸展</span>
-          </div>
-        </div>
-
-        <div class="exitem-wrap">
-          <div class="exitem" data-ex="核心訓練">
-            <div><div class="exname">③ 核心訓練</div><div class="exmeta">3 組 × 10 次</div></div>
-            <button class="startbtn" onclick="startTimer('核心訓練', this)">開始</button>
-          </div>
-          <div class="exguide">
-            <svg viewBox="0 0 120 72"><line x1="4" y1="66" x2="116" y2="66" class="gd-floor"/>
-              <circle cx="14" cy="34" r="10" class="gd-shape"/>
-              <line x1="18" y1="42" x2="18" y2="60" class="gd-line"/>
-              <path d="M18 42 L102 42" class="gd-line" fill="none"/>
-              <line x1="102" y1="42" x2="108" y2="60" class="gd-line"/>
-            </svg>
-            <span>棒式支撐，身體呈一直線，核心收緊維持穩定</span>
-          </div>
-        </div>
+      <div class="empty-state" id="rehab-empty" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.6"><rect x="4" y="5" width="16" height="16" rx="2"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>
+        <div class="empty-title">目前尚無居家復健項目</div>
+        <div class="empty-sub">完成門診初診評估後，治療師會為您安排專屬的復健動作</div>
       </div>
+
+      <div id="rehab-content">
+      <div style="font-size:12px; color:var(--muted); margin-top:-10px;">完成一組動作後，點擊「休息」開始組間倒數計時</div>
+      <div class="exlist" id="exlist"></div>
 
       <div class="mascot-row" id="mascot-done" style="display:none;">
-        <svg viewBox="0 0 60 60">
-          <ellipse cx="30" cy="48" rx="13" ry="6" fill="var(--primary-light)"/>
-          <path d="M30 46 C30 30 30 22 30 16" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" fill="none"/>
-          <path d="M30 24 C24 20 18 22 16 16 C24 15 29 18 30 24Z" fill="var(--primary)"/>
-          <path d="M30 20 C36 16 42 18 44 12 C36 11 31 14 30 20Z" fill="var(--accent)"/>
-          <circle cx="30" cy="42" r="11" fill="var(--surface)" stroke="var(--primary)" stroke-width="2.5"/>
-          <path d="M25 40 Q26.5 38 28 40" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-          <path d="M32 40 Q33.5 38 35 40" stroke="var(--ink)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-          <path d="M24 44 Q30 50 36 44" stroke="var(--ink)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-        </svg>
-        <div class="mascot-msg">豆芽說：<b>今天的三項都完成了！</b>接下來記錄一下疼痛感覺吧</div>
+        <div class="mascot-msg"><b>今天的三項都完成了！</b>接下來記錄一下疼痛感覺吧</div>
       </div>
 
-      <div class="timerwrap" id="timerwrap" style="display:none;">
-        <div class="timernum" id="timernum">00:45</div>
+      <div class="timerwrap" id="timerwrap" style="display:none;" onclick="skipTimer()">
+        <div style="position:relative; width:120px; height:120px; margin:0 auto;">
+          <svg width="120" height="120" viewBox="0 0 120 120" class="timer-ring">
+            <circle cx="60" cy="60" r="52" class="timer-ring-track"/>
+            <circle cx="60" cy="60" r="52" class="timer-ring-fill" id="timer-ring-fill" style="stroke-dasharray:326.7; stroke-dashoffset:0;"/>
+          </svg>
+          <div class="timernum" id="timernum" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">00:45</div>
+        </div>
         <div class="timerlabel" id="timerlabel">橋式 · 組間休息</div>
+        <div class="timerskip">點擊可跳過休息</div>
       </div>
       <div class="toggle-row">
         <span>Visual Guide Mode（動作示範圖）</span>
@@ -591,6 +550,7 @@
       </div>
 
       <button class="btn-block" onclick="go('vas')">完成今日復健，記錄疼痛</button>
+      </div>
     </section>
 
     <!-- VAS -->
@@ -617,16 +577,7 @@
       <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="title">復健追蹤</div></div>
 
       <div class="mascot-row mascot-pop">
-        <svg viewBox="0 0 60 60">
-          <ellipse cx="30" cy="48" rx="13" ry="6" fill="var(--primary-light)"/>
-          <path d="M30 46 C30 30 30 22 30 16" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" fill="none"/>
-          <path d="M30 24 C24 20 18 22 16 16 C24 15 29 18 30 24Z" fill="var(--primary)"/>
-          <path d="M30 20 C36 16 42 18 44 12 C36 11 31 14 30 20Z" fill="var(--accent)"/>
-          <circle cx="30" cy="42" r="11" fill="var(--surface)" stroke="var(--primary)" stroke-width="2.5"/>
-          <circle cx="26" cy="41" r="1.6" fill="var(--ink)"/><circle cx="34" cy="41" r="1.6" fill="var(--ink)"/>
-          <path d="M25 45 Q30 49 35 45" stroke="var(--ink)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-        </svg>
-        <div class="mascot-msg">豆芽說：本週已經完成 <b>5 天</b> 復健了，繼續保持這個節奏，你做得很好！</div>
+        <div class="mascot-msg">本週已經完成 <b>5 天</b> 復健了，繼續保持這個節奏，你做得很好！</div>
       </div>
 
       <div class="statcard">
@@ -641,6 +592,26 @@
             <div class="ring-num" style="font-size:15px; font-weight:600;">本週已完成</div>
             <div class="ring-sub">5 天 ／ 已過 7 天</div>
           </div>
+        </div>
+      </div>
+
+      <div class="statcard">
+        <div class="statlabel" style="margin-bottom:4px;">近14天復健紀錄</div>
+        <div class="heatmap">
+          <div class="heat-cell done"></div>
+          <div class="heat-cell done"></div>
+          <div class="heat-cell done"></div>
+          <div class="heat-cell"></div>
+          <div class="heat-cell done"></div>
+          <div class="heat-cell done"></div>
+          <div class="heat-cell done"></div>
+          <div class="heat-cell done"></div>
+          <div class="heat-cell done"></div>
+          <div class="heat-cell done"></div>
+          <div class="heat-cell"></div>
+          <div class="heat-cell done"></div>
+          <div class="heat-cell"></div>
+          <div class="heat-cell done today"></div>
         </div>
       </div>
 
@@ -670,9 +641,18 @@
     <!-- FOLLOWUP BOOKING -->
     <section class="screen" id="screen-followup">
       <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="title">預約複診</div></div>
+
+      <div class="empty-state" id="followup-empty" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        <div class="empty-title">目前尚無回診紀錄</div>
+        <div class="empty-sub">完成門診初診評估後，即可透過此頁面預約複診</div>
+      </div>
+
+      <div id="followup-form-content">
       <div class="field"><label>請輸入預約時填寫的聯絡方式</label><input id="followup-phone" placeholder="例如 0912-345-678" value="0912-345-678"></div>
       <button class="btn-block" style="margin-top:0;" onclick="lookupFollowup()">查詢我的治療師</button>
       <div id="followup-result"></div>
+      </div>
     </section>
 
     <!-- MY APPOINTMENTS -->
@@ -690,9 +670,81 @@
 function go(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
-  const floatEl = document.getElementById('home-mascot-float');
-  if(floatEl) floatEl.style.display = (name === 'home') ? 'flex' : 'none';
   if(name === 'home'){ resetBookingState(); }
+  if(name === 'rehab'){ renderRehabScreen(); }
+  if(name === 'followup'){ renderFollowupScreen(); }
+}
+
+function renderFollowupScreen(){
+  const isNew = demoMode === 'new';
+  document.getElementById('followup-empty').style.display = isNew ? 'flex' : 'none';
+  document.getElementById('followup-form-content').style.display = isNew ? 'none' : 'flex';
+}
+
+const exerciseSets = {
+  lowerback: [
+    { name:'① 橋式', meta:'3 組 × 10 次', ex:'橋式', sets:3, desc:'躺姿，雙膝彎曲，臀部向上抬起成橋形',
+      svg:'<svg viewBox="0 0 120 72"><line x1="4" y1="64" x2="116" y2="64" class="gd-floor"/><circle cx="18" cy="48" r="10" class="gd-shape"/><path d="M24 58 L56 28 L82 40 L98 60" class="gd-line" fill="none"/></svg>' },
+    { name:'② 貓牛式', meta:'2 組 × 8 次', ex:'貓牛式', sets:2, desc:'四足跪姿，脊椎緩慢一拱一塌，感受背部伸展',
+      svg:'<svg viewBox="0 0 120 72"><line x1="4" y1="65" x2="116" y2="65" class="gd-floor"/><line x1="28" y1="24" x2="28" y2="60" class="gd-line"/><line x1="92" y1="24" x2="92" y2="60" class="gd-line"/><path d="M28 24 Q60 6 92 24" class="gd-line" fill="none"/><circle cx="22" cy="19" r="10" class="gd-shape"/></svg>' },
+    { name:'③ 核心訓練', meta:'3 組 × 10 次', ex:'核心訓練', sets:3, desc:'棒式支撐，身體呈一直線，核心收緊維持穩定',
+      svg:'<svg viewBox="0 0 120 72"><line x1="4" y1="66" x2="116" y2="66" class="gd-floor"/><circle cx="14" cy="34" r="10" class="gd-shape"/><line x1="18" y1="42" x2="18" y2="60" class="gd-line"/><path d="M18 42 L102 42" class="gd-line" fill="none"/><line x1="102" y1="42" x2="108" y2="60" class="gd-line"/></svg>' }
+  ],
+  shoulder: [
+    { name:'① 肩關節鐘擺運動', meta:'3 組 × 10 次', ex:'肩關節鐘擺運動', sets:3, desc:'身體前傾，手臂自然下垂並輕輕畫圈擺動，放鬆肩關節',
+      svg:'<svg viewBox="0 0 120 72"><line x1="4" y1="68" x2="116" y2="68" class="gd-floor"/><circle cx="40" cy="18" r="10" class="gd-shape"/><line x1="40" y1="28" x2="60" y2="55" class="gd-line"/><line x1="60" y1="55" x2="58" y2="68" class="gd-line"/><path d="M45 32 Q30 45 38 60" class="gd-line" fill="none"/></svg>' },
+    { name:'② 肩胛骨後夾', meta:'3 組 × 12 次', ex:'肩胛骨後夾', sets:3, desc:'雙手打開向後，肩胛骨向脊椎方向夾緊維持',
+      svg:'<svg viewBox="0 0 120 72"><line x1="4" y1="68" x2="116" y2="68" class="gd-floor"/><circle cx="60" cy="16" r="10" class="gd-shape"/><line x1="60" y1="26" x2="60" y2="68" class="gd-line"/><path d="M60 34 L30 30" class="gd-line" fill="none"/><path d="M60 34 L90 30" class="gd-line" fill="none"/></svg>' },
+    { name:'③ 彈力帶外旋', meta:'2 組 × 15 次', ex:'彈力帶外旋', sets:2, desc:'手肘貼緊身體，前臂向外緩慢旋轉，訓練旋轉肌群',
+      svg:'<svg viewBox="0 0 120 72"><line x1="4" y1="68" x2="116" y2="68" class="gd-floor"/><circle cx="60" cy="16" r="10" class="gd-shape"/><line x1="60" y1="26" x2="60" y2="68" class="gd-line"/><line x1="60" y1="34" x2="72" y2="46" class="gd-line"/><path d="M72 46 L90 40" class="gd-line" fill="none"/></svg>' }
+  ],
+  knee: [
+    { name:'① 直膝抬腿', meta:'3 組 × 10 次', ex:'直膝抬腿', sets:3, desc:'平躺，膝蓋打直，緩慢抬高至45度後放下',
+      svg:'<svg viewBox="0 0 120 72"><line x1="4" y1="64" x2="116" y2="64" class="gd-floor"/><circle cx="18" cy="50" r="10" class="gd-shape"/><line x1="26" y1="56" x2="60" y2="58" class="gd-line"/><path d="M60 58 L98 30" class="gd-line" fill="none"/></svg>' },
+    { name:'② 靠牆深蹲', meta:'3 組 × 30 秒', ex:'靠牆深蹲', sets:3, desc:'背靠牆，膝蓋彎曲呈90度維持，訓練股四頭肌',
+      svg:'<svg viewBox="0 0 120 72"><line x1="4" y1="68" x2="116" y2="68" class="gd-floor"/><line x1="100" y1="6" x2="100" y2="68" class="gd-floor"/><circle cx="70" cy="20" r="10" class="gd-shape"/><line x1="70" y1="30" x2="90" y2="44" class="gd-line"/><path d="M90 44 L60 44 L60 68" class="gd-line" fill="none"/></svg>' },
+    { name:'③ 踏階訓練', meta:'2 組 × 10 次', ex:'踏階訓練', sets:2, desc:'單腳踩上台階，緩慢控制起立與下降，訓練膝關節穩定度',
+      svg:'<svg viewBox="0 0 120 72"><line x1="4" y1="68" x2="60" y2="68" class="gd-floor"/><rect x="60" y="52" width="40" height="16" class="gd-floor" fill="none"/><circle cx="50" cy="30" r="10" class="gd-shape"/><line x1="50" y1="40" x2="55" y2="60" class="gd-line"/><path d="M52 44 L80 52" class="gd-line" fill="none"/></svg>' }
+  ]
+};
+
+function getExerciseSetKey(){
+  if(lastBodyPart.includes('肩膀')) return 'shoulder';
+  if(lastBodyPart.includes('膝蓋')) return 'knee';
+  return 'lowerback';
+}
+
+function renderExerciseList(){
+  const list = exerciseSets[getExerciseSetKey()];
+  document.getElementById('exlist').innerHTML = list.map(item => `
+    <div class="exitem-wrap" data-total="${item.sets}" data-done="0">
+      <div class="exitem" data-ex="${item.ex}">
+        <div>
+          <div class="exname">${item.name}</div>
+          <div class="exmeta">${item.meta}</div>
+          <div class="exprogress" style="font-size:11px; color:var(--primary); margin-top:2px;"></div>
+        </div>
+        <button class="startbtn" onclick="startTimer('${item.ex}', this)">休息</button>
+      </div>
+      <div class="exguide">
+        ${item.svg}
+        <span>${item.desc}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderRehabScreen(){
+  const isNew = demoMode === 'new';
+  document.getElementById('rehab-empty').style.display = isNew ? 'flex' : 'none';
+  document.getElementById('rehab-content').style.display = isNew ? 'none' : 'flex';
+  if(!isNew){
+    renderExerciseList();
+    clearInterval(timerInterval);
+    activeExerciseBtn = null;
+    document.getElementById('timerwrap').style.display = 'none';
+    document.getElementById('mascot-done').style.display = 'none';
+  }
 }
 
 // ---------- 共用工具函式 ----------
@@ -725,6 +777,16 @@ function resetBookingState(){
   followupSlot = null;
 }
 
+function fetchJson(url, options){
+  return fetch(url, options).then(res => res.text()).then(text => {
+    try{
+      return JSON.parse(text);
+    } catch(e){
+      throw new Error('後端未回傳正確的資料格式，請確認 Apps Script 是否已部署最新版本');
+    }
+  });
+}
+
 // ---------- 真實 API 串接（第一段：表單 → 治療師配對）----------
 const API_BASE = 'https://script.google.com/macros/s/AKfycby8y5rY7l4Gdtc2w1D0qw6vnxikdC3Zy-PPtwA7yl_Q8Drp3vBDS2VEzdHGEMja-qxnxw/exec';
 let currentPatientId = null;
@@ -732,6 +794,7 @@ let patientReadyPromise = null;
 
 function submitStep1(){
   if(!selectedBodyTags.size){ alert('請至少選擇一個不適部位'); return; }
+  lastBodyPart = Array.from(selectedBodyTags);
   const bodyPart = Array.from(selectedBodyTags).join(',');
   const name = document.getElementById('in-name').value.trim();
   const phone = document.getElementById('in-phone').value.trim();
@@ -749,12 +812,11 @@ function submitStep1(){
   document.getElementById('confirm-btn').disabled = true;
 
   // 建立病人資料（text/plain 避免瀏覽器對 Apps Script 送出 CORS 預檢請求失敗）
-  patientReadyPromise = fetch(API_BASE, {
+  patientReadyPromise = fetchJson(API_BASE, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ action: 'createPatient', name, phone, bodyPart, symptomNote })
   })
-    .then(res => res.json())
     .then(data => {
       if(data.error) throw new Error(data.error);
       currentPatientId = data.patient_id;
@@ -765,8 +827,7 @@ function submitStep1(){
       throw err;
     });
 
-  fetch(`${API_BASE}?action=match&bodyPart=${encodeURIComponent(bodyPart)}`)
-    .then(res => res.json())
+  fetchJson(`${API_BASE}?action=match&bodyPart=${encodeURIComponent(bodyPart)}`)
     .then(data => {
       if(data.error){ throw new Error(data.error); }
       renderMatchResults(data);
@@ -815,7 +876,7 @@ function submitBooking(){
   Promise.resolve(patientReadyPromise)
     .then(() => {
       if(!currentPatientId) throw new Error('病人資料尚未建立完成，請稍後再試');
-      return fetch(API_BASE, {
+      return fetchJson(API_BASE, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
@@ -828,7 +889,6 @@ function submitBooking(){
         })
       });
     })
-    .then(res => res.json())
     .then(data => {
       if(data.error) throw new Error(data.error);
       document.getElementById('line-msg').innerHTML = buildConfirmMessage('new');
@@ -845,6 +905,7 @@ function submitBooking(){
 
 // body part multi-select via body diagram（可複選，match API 會逗號分隔一起比對）
 let selectedBodyTags = new Set();
+let lastBodyPart = [];
 document.querySelectorAll('.bd-zone').forEach(el=>{
   el.addEventListener('click', ()=>{
     const tag = el.dataset.tag;
@@ -888,24 +949,65 @@ function pickSlot(el){
 
 // timer (dead demo: fixed 45s countdown)
 let timerInterval = null;
+let activeExerciseBtn = null;
+const TIMER_TOTAL = 45;
+const TIMER_CIRC = 326.7;
+
 function startTimer(exName, btnEl){
+  const wrap = btnEl.closest('.exitem-wrap');
+  const total = parseInt(wrap.dataset.total, 10) || 1;
+  const done = parseInt(wrap.dataset.done, 10) || 0;
   document.getElementById('timerwrap').style.display = 'block';
-  document.getElementById('timerlabel').textContent = exName + ' · 組間休息';
-  let seconds = 45;
+  document.getElementById('timerlabel').textContent = exName + `・第 ${done+1}／${total} 組休息`;
+  activeExerciseBtn = btnEl;
+  let seconds = TIMER_TOTAL;
+  updateTimerDisplay(seconds);
   clearInterval(timerInterval);
   timerInterval = setInterval(()=>{
     seconds--;
-    const m = String(Math.floor(seconds/60)).padStart(2,'0');
-    const s = String(seconds%60).padStart(2,'0');
-    document.getElementById('timernum').textContent = m+':'+s;
+    updateTimerDisplay(seconds);
     if(seconds<=0){
       clearInterval(timerInterval);
-      btnEl.closest('.exitem').classList.add('done');
-      btnEl.outerHTML = '<span class="exdone-badge">已完成 ✓</span>';
-      document.getElementById('timerwrap').style.display='none';
-      checkAllExercisesDone();
+      completeActiveExercise();
     }
   },1000);
+}
+
+function updateTimerDisplay(seconds){
+  const m = String(Math.floor(Math.max(seconds,0)/60)).padStart(2,'0');
+  const s = String(Math.max(seconds,0)%60).padStart(2,'0');
+  document.getElementById('timernum').textContent = m+':'+s;
+  const offset = TIMER_CIRC * (1 - Math.max(seconds,0)/TIMER_TOTAL);
+  document.getElementById('timer-ring-fill').style.strokeDashoffset = offset;
+}
+
+function skipTimer(){
+  if(!activeExerciseBtn) return;
+  clearInterval(timerInterval);
+  completeActiveExercise();
+}
+
+function completeActiveExercise(){
+  const btnEl = activeExerciseBtn;
+  if(!btnEl) return;
+  const wrap = btnEl.closest('.exitem-wrap');
+  const total = parseInt(wrap.dataset.total, 10) || 1;
+  let done = parseInt(wrap.dataset.done, 10) || 0;
+  done++;
+  wrap.dataset.done = done;
+  document.getElementById('timerwrap').style.display='none';
+  activeExerciseBtn = null;
+  wrap.classList.add('just-done');
+  setTimeout(()=>wrap.classList.remove('just-done'), 1000);
+
+  if(done < total){
+    const prog = wrap.querySelector('.exprogress');
+    if(prog) prog.textContent = `已完成 ${done}／${total} 組，請繼續下一組`;
+  } else {
+    btnEl.closest('.exitem').classList.add('done');
+    btnEl.outerHTML = '<span class="exdone-badge">已完成 ✓</span>';
+    checkAllExercisesDone();
+  }
 }
 
 function checkAllExercisesDone(){
@@ -915,6 +1017,10 @@ function checkAllExercisesDone(){
     const mascot = document.getElementById('mascot-done');
     mascot.style.display = 'flex';
     mascot.classList.add('mascot-pop');
+    const ring = document.createElement('div');
+    ring.className = 'celebrate-ring';
+    document.body.appendChild(ring);
+    setTimeout(()=>ring.remove(), 800);
   }
 }
 
@@ -935,8 +1041,7 @@ function lookupFollowup(){
   if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912-345-678）'); return; }
   resultEl.innerHTML = '<div class="tcard" style="text-align:center; color:var(--muted);"><div class="spinner"></div>查詢中...</div>';
 
-  fetch(`${API_BASE}?action=followupInfo&phone=${encodeURIComponent(phone)}`)
-    .then(res => res.json())
+  fetchJson(`${API_BASE}?action=followupInfo&phone=${encodeURIComponent(phone)}`)
     .then(data => {
       if(data.error) throw new Error(data.error);
       renderFollowup(data);
@@ -963,12 +1068,14 @@ function renderFollowup(data){
       <div class="slots">
         ${data.available_slots.length ? data.available_slots.map(s => s.is_booked
             ? `<div class="slot full">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)} 額滿</div>`
-            : `<div class="slot" data-tid="${escapeHtml(data.therapist_id)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickFollowupSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
+            : `<div class="slot" data-tid="${escapeHtml(data.therapist_id)}" data-tname="${escapeHtml(data.therapist_name)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickFollowupSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
           ).join('') : '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>'}
       </div>
     </div>
-    <button class="btn-block" id="followup-confirm-btn" onclick="submitFollowupBooking()" disabled>確認複診預約</button>
-    <button class="btn-ghost" onclick="showOtherTherapists()">想更換治療師？查看其他治療師</button>
+    <div class="button-group">
+      <button class="btn-block" id="followup-confirm-btn" onclick="submitFollowupBooking()" disabled>確認複診預約</button>
+      <button class="btn-ghost" onclick="showOtherTherapists()">想更換治療師？查看其他治療師</button>
+    </div>
     <div id="other-therapists-result" style="display:flex; flex-direction:column; gap:12px;"></div>
   `;
 }
@@ -977,8 +1084,7 @@ function showOtherTherapists(){
   const container = document.getElementById('other-therapists-result');
   container.innerHTML = '<div class="tcard" style="text-align:center; color:var(--muted);"><div class="spinner"></div>載入中...</div>';
 
-  fetch(`${API_BASE}?action=allTherapists`)
-    .then(res => res.json())
+  fetchJson(`${API_BASE}?action=allTherapists`)
     .then(data => {
       if(data.error) throw new Error(data.error);
       container.innerHTML = data.map(t => `
@@ -988,7 +1094,7 @@ function showOtherTherapists(){
           <div class="slots">
             ${t.available_slots.length ? t.available_slots.map(s => s.is_booked
                 ? `<div class="slot full">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)} 額滿</div>`
-                : `<div class="slot" data-tid="${escapeHtml(t.therapist_id)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickFollowupSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
+                : `<div class="slot" data-tid="${escapeHtml(t.therapist_id)}" data-tname="${escapeHtml(t.name)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickFollowupSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
               ).join('') : '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>'}
           </div>
         </div>
@@ -1004,6 +1110,7 @@ function pickFollowupSlot(el){
   el.classList.add('selected');
   followupSlot = {
     therapistId: el.dataset.tid,
+    therapistName: el.dataset.tname,
     scheduleId: el.dataset.sid,
     date: el.dataset.date,
     time: el.dataset.time
@@ -1017,7 +1124,7 @@ function submitFollowupBooking(){
   btn.disabled = true;
   btn.textContent = '預約中...';
 
-  fetch(API_BASE, {
+  fetchJson(API_BASE, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({
@@ -1029,12 +1136,11 @@ function submitFollowupBooking(){
       time: followupSlot.time
     })
   })
-    .then(res => res.json())
     .then(data => {
       if(data.error) throw new Error(data.error);
       document.getElementById('line-date').textContent = followupSlot.date.slice(5).replace('-','/');
       document.getElementById('line-time').textContent = followupSlot.time;
-      document.getElementById('line-t').textContent = document.querySelector('#followup-result .tcard-name').textContent;
+      document.getElementById('line-t').textContent = followupSlot.therapistName;
       document.getElementById('line-msg').innerHTML = buildConfirmMessage('followup');
       go('confirm');
       btn.textContent = '確認複診預約';
@@ -1055,8 +1161,7 @@ function lookupAppointments(){
   if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912-345-678）'); return; }
   listEl.innerHTML = '<div class="tcard" style="text-align:center; color:var(--muted);"><div class="spinner"></div>查詢中...</div>';
 
-  fetch(`${API_BASE}?action=myAppointments&phone=${encodeURIComponent(phone)}`)
-    .then(res => res.json())
+  fetchJson(`${API_BASE}?action=myAppointments&phone=${encodeURIComponent(phone)}`)
     .then(data => {
       if(data.error) throw new Error(data.error);
       renderAppointments(data);
@@ -1095,12 +1200,11 @@ function renderAppointments(list){
 
 function cancelAppt(appointmentId){
   if(!confirm('確定要取消這筆預約嗎？')) return;
-  fetch(API_BASE, {
+  fetchJson(API_BASE, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ action: 'cancelAppointment', appointmentId })
   })
-    .then(res => res.json())
     .then(data => {
       if(data.error) throw new Error(data.error);
       lookupAppointments();
@@ -1108,85 +1212,19 @@ function cancelAppt(appointmentId){
     .catch(err => alert('取消失敗：' + err.message));
 }
 
-// ---------- 浮動豆芽：可拖曳 + 點擊變換鼓勵語 ----------
-(function(){
-  const floatEl = document.getElementById('home-mascot-float');
-  const icon = floatEl.querySelector('.mascot-float-icon');
-  const bubble = document.getElementById('home-mascot-msg');
-  const phone = document.querySelector('.phone');
-
-  const messages = [
-    '豆芽在這裡陪你一起完成復健，加油！',
-    '記得每天做一點點，比一次做很多更有效喔',
-    '今天感覺怎麼樣？別忘了記錄疼痛分數',
-    '休息也是復健的一部分，別太勉強自己',
-    '你已經做得很好了，繼續保持！',
-    '你可以拖著我到你喜歡的位置喔'
-  ];
-
-  let dragging = false, moved = false, startX, startY, startLeft, startTop;
-
-  function pinToLeftTop(){
-    const rect = floatEl.getBoundingClientRect();
-    const pRect = phone.getBoundingClientRect();
-    floatEl.style.left = (rect.left - pRect.left) + 'px';
-    floatEl.style.top = (rect.top - pRect.top) + 'px';
-    floatEl.style.right = 'auto';
-    floatEl.style.bottom = 'auto';
-  }
-
-  function onDown(e){
-    dragging = true; moved = false;
-    const p = e.touches ? e.touches[0] : e;
-    startX = p.clientX; startY = p.clientY;
-    pinToLeftTop();
-    startLeft = parseFloat(floatEl.style.left);
-    startTop = parseFloat(floatEl.style.top);
-    e.preventDefault();
-  }
-  function onMove(e){
-    if(!dragging) return;
-    const p = e.touches ? e.touches[0] : e;
-    const dx = p.clientX - startX, dy = p.clientY - startY;
-    if(Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
-    const pRect = phone.getBoundingClientRect();
-    const maxLeft = pRect.width - floatEl.offsetWidth;
-    const maxTop = pRect.height - floatEl.offsetHeight;
-    floatEl.style.left = Math.max(0, Math.min(startLeft + dx, maxLeft)) + 'px';
-    floatEl.style.top = Math.max(0, Math.min(startTop + dy, maxTop)) + 'px';
-  }
-  function onUp(){
-    if(dragging && !moved){
-      const next = messages[Math.floor(Math.random() * messages.length)];
-      bubble.textContent = next;
-      bubble.classList.remove('mascot-pop');
-      void bubble.offsetWidth;
-      bubble.classList.add('mascot-pop');
-    }
-    dragging = false;
-  }
-
-  icon.addEventListener('mousedown', onDown);
-  icon.addEventListener('touchstart', onDown, { passive: false });
-  window.addEventListener('mousemove', onMove);
-  window.addEventListener('touchmove', onMove, { passive: false });
-  window.addEventListener('mouseup', onUp);
-  window.addEventListener('touchend', onUp);
-})();
-
+let demoMode = 'new';
 function setMode(mode){
+  demoMode = mode;
   document.getElementById('mode-new').classList.toggle('active', mode==='new');
   document.getElementById('mode-return').classList.toggle('active', mode==='return');
   if(mode==='new'){
     document.getElementById('home-hello').textContent = '陳先生，您好';
     document.getElementById('home-headline').textContent = '讓復健，不只發生在診所裡';
     document.getElementById('home-foot').textContent = '已透過 LINE 辨識您的身份，免登入、免輸入密碼。';
-    document.getElementById('home-mascot-msg').textContent = '豆芽在這裡陪你一起完成復健，加油！';
   } else {
     document.getElementById('home-hello').textContent = '陳先生，好久不見';
     document.getElementById('home-headline').textContent = '今天也一起完成復健吧';
     document.getElementById('home-foot').textContent = '距離初診已滿3週，本週已連續完成 5 天居家復健。';
-    document.getElementById('home-mascot-msg').textContent = '豆芽說：你已經連續完成好幾天了，是我看過最認真的病人之一！';
   }
   go('home');
 }
