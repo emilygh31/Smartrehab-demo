@@ -1338,21 +1338,37 @@ function renderAppointments(list){
     </div>`;
     return;
   }
-  const sorted = [...list].sort((a, b) => {
-    const aCancelled = a.status === 'cancelled' ? 1 : 0;
-    const bCancelled = b.status === 'cancelled' ? 1 : 0;
-    if(aCancelled !== bCancelled) return aCancelled - bCancelled;
+  const today = todayStr();
+  const withStage = list.map(a => {
+    let stage = 'upcoming';
+    if(a.status === 'cancelled'){ stage = 'cancelled'; }
+    else if(a.date < today){ stage = 'past'; }
+    return { ...a, stage };
+  });
+  const stageOrder = { upcoming: 0, past: 1, cancelled: 2 };
+  const sorted = [...withStage].sort((a, b) => {
+    if(stageOrder[a.stage] !== stageOrder[b.stage]) return stageOrder[a.stage] - stageOrder[b.stage];
     return (a.date + a.time).localeCompare(b.date + b.time);
   });
+  const stageBadge = { upcoming: '已確認', past: '已完成', cancelled: '已取消' };
   listEl.innerHTML = sorted.map(a => `
     <div class="tcard">
       <div class="tcard-head">
         <div class="tcard-name">${escapeHtml(a.date.slice(5).replace('-','/'))} ${escapeHtml(a.time)}　${escapeHtml(a.therapist_name)}</div>
-        <div class="badge" style="${a.status==='cancelled' ? 'background:var(--line);color:var(--muted);' : ''}">${a.status==='cancelled' ? '已取消' : '已確認'}</div>
+        <div class="badge" style="${a.stage!=='upcoming' ? 'background:var(--line);color:var(--muted);' : ''}">${stageBadge[a.stage]}</div>
       </div>
-      ${a.status!=='cancelled' ? `<button class="btn-ghost" style="margin-top:10px; width:100%;" onclick="cancelAppt('${escapeHtml(a.appointment_id)}')">取消這筆預約</button>` : ''}
+      ${a.stage==='upcoming' ? `<button class="btn-ghost" style="margin-top:10px; width:100%;" onclick="cancelAppt('${escapeHtml(a.appointment_id)}')">取消這筆預約</button>` : ''}
     </div>
   `).join('');
+}
+
+function todayStr(){
+  if(demoMode === 'return'){ return '2026-09-15'; }
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
 }
 
 function cancelAppt(appointmentId){
