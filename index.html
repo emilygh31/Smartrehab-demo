@@ -435,7 +435,21 @@
       <div class="hello" id="home-hello">陳先生，您好</div>
       <h1 class="headline" id="home-headline">讓復健，不只發生在診所裡</h1>
       <button class="cta-primary" id="cta-book" onclick="go('form')">立即預約門診初診評估 <span>→</span></button>
-      <button class="cta-secondary" onclick="go('rehab')">前往今日居家復健 <span>→</span></button>
+      <button class="cta-secondary" onclick="go('rehab')">
+        <span style="display:flex; align-items:center; gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" style="flex:none;">
+            <ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/>
+            <ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/>
+            <ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/>
+            <ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/>
+            <ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/>
+            <ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/>
+            <circle cx="12" cy="12" r="2.3" fill="var(--accent)"/>
+          </svg>
+          前往今日居家復健
+        </span>
+        <span>→</span>
+      </button>
       <button class="cta-secondary" onclick="go('followup')">預約複診 <span>→</span></button>
       <button class="btn-ghost" onclick="go('myappt')" style="text-align:left;">查詢／取消預約</button>
 
@@ -564,7 +578,43 @@
       </div>
 
       <div id="rehab-content">
-      <div style="font-size:12px; color:var(--muted); margin-top:-10px;">完成一組動作後，點擊「休息」開始組間倒數計時</div>
+      <div class="statcard" style="text-align:center; padding:16px;">
+        <div class="statlabel" style="margin-bottom:2px;">今日復健植物</div>
+        <div class="growth-wrap" id="daily-growth-plant" style="cursor:default;">
+          <svg viewBox="0 0 120 140" width="86" height="100">
+            <line x1="20" y1="130" x2="100" y2="130" stroke="var(--line)" stroke-width="2" stroke-linecap="round"/>
+            <g class="daily-plant-stage-g" data-stage="seed" style="display:none;">
+              <ellipse cx="60" cy="122" rx="10" ry="7" fill="var(--primary)"/>
+            </g>
+            <g class="daily-plant-stage-g" data-stage="sprout" style="display:none;">
+              <path d="M60 130 L60 108" stroke="var(--primary)" stroke-width="4" stroke-linecap="round" fill="none"/>
+              <path d="M60 112 C52 108 48 100 50 94 C58 96 62 104 60 112Z" fill="var(--primary)"/>
+            </g>
+            <g class="daily-plant-stage-g" data-stage="sapling" style="display:none;">
+              <path d="M60 130 L60 78" stroke="var(--primary)" stroke-width="4" stroke-linecap="round" fill="none"/>
+              <path d="M60 96 C48 90 42 78 46 68 C58 72 64 84 60 96Z" fill="var(--primary)"/>
+              <path d="M60 108 C72 102 78 90 74 80 C62 84 56 96 60 108Z" fill="var(--primary)"/>
+            </g>
+            <g class="daily-plant-stage-g" data-stage="bloom" style="display:none;">
+              <path d="M60 130 L60 58" stroke="var(--primary)" stroke-width="4" stroke-linecap="round" fill="none"/>
+              <path d="M60 90 C46 84 38 70 42 58 C56 62 64 76 60 90Z" fill="var(--primary)"/>
+              <path d="M60 100 C74 94 82 80 78 68 C64 72 56 86 60 100Z" fill="var(--primary)"/>
+              <g>
+                <ellipse cx="60" cy="24" rx="7" ry="11" fill="var(--primary)"/>
+                <ellipse cx="60" cy="24" rx="7" ry="11" fill="var(--primary)" transform="rotate(60 60 37)"/>
+                <ellipse cx="60" cy="24" rx="7" ry="11" fill="var(--primary)" transform="rotate(120 60 37)"/>
+                <ellipse cx="60" cy="24" rx="7" ry="11" fill="var(--primary)" transform="rotate(180 60 37)"/>
+                <ellipse cx="60" cy="24" rx="7" ry="11" fill="var(--primary)" transform="rotate(240 60 37)"/>
+                <ellipse cx="60" cy="24" rx="7" ry="11" fill="var(--primary)" transform="rotate(300 60 37)"/>
+                <circle cx="60" cy="37" r="6" fill="var(--accent)"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div class="growth-sub" id="daily-growth-sub" style="margin-top:2px;">完成動作，幫植物澆水</div>
+      </div>
+
+      <div style="font-size:12px; color:var(--muted);">完成一組動作後，點擊「休息」開始組間倒數計時</div>
       <div class="exlist" id="exlist"></div>
 
       <div class="mascot-row" id="mascot-done" style="display:none;">
@@ -822,6 +872,7 @@ function renderRehabScreen(){
   document.getElementById('rehab-content').style.display = isNew ? 'none' : 'flex';
   if(!isNew){
     renderExerciseList();
+    renderDailyPlant();
     clearInterval(timerInterval);
     activeExerciseBtn = null;
     document.getElementById('timerwrap').style.display = 'none';
@@ -1093,8 +1144,41 @@ function completeActiveExercise(){
   } else {
     btnEl.closest('.exitem').classList.add('done');
     btnEl.outerHTML = '<span class="exdone-badge">已完成 ✓</span>';
+    renderDailyPlant();
+    spawnDailyWaterDrops();
     checkAllExercisesDone();
   }
+}
+
+const dailyPlantStages = ['seed', 'sprout', 'sapling', 'bloom'];
+function renderDailyPlant(){
+  const doneCount = document.querySelectorAll('#exlist .exitem.done').length;
+  const stageKey = dailyPlantStages[Math.min(doneCount, dailyPlantStages.length - 1)];
+  document.querySelectorAll('.daily-plant-stage-g').forEach(g => {
+    g.style.display = (g.dataset.stage === stageKey) ? 'block' : 'none';
+  });
+  const total = document.querySelectorAll('#exlist .exitem').length;
+  const sub = document.getElementById('daily-growth-sub');
+  if(sub){
+    sub.textContent = doneCount >= total && total > 0
+      ? '今天的植物已經完整成長了！'
+      : `已完成 ${doneCount} 項動作，繼續澆水吧`;
+  }
+}
+
+function spawnDailyWaterDrops(){
+  const wrap = document.getElementById('daily-growth-plant');
+  if(!wrap) return;
+  const offsets = [-16, 0, 16];
+  offsets.forEach((offset, i) => {
+    const drop = document.createElement('div');
+    drop.className = 'water-drop';
+    drop.style.left = `calc(50% + ${offset}px)`;
+    drop.style.animationDelay = (i * 0.08) + 's';
+    drop.innerHTML = '<svg viewBox="0 0 16 18" width="12" height="14"><path d="M8 0 C8 0 14 8 14 12 C14 15.3 11.3 18 8 18 C4.7 18 2 15.3 2 12 C2 8 8 0 8 0 Z" fill="var(--primary)"/></svg>';
+    wrap.appendChild(drop);
+    setTimeout(()=>drop.remove(), 700);
+  });
 }
 
 function checkAllExercisesDone(){
