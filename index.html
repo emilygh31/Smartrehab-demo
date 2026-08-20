@@ -874,7 +874,9 @@ const API_BASE = 'https://script.google.com/macros/s/AKfycby8y5rY7l4Gdtc2w1D0qw6
 let currentPatientId = null;
 let patientReadyPromise = null;
 
+let submittingStep1 = false;
 function submitStep1(){
+  if(submittingStep1) return;
   if(!selectedBodyTags.size){ alert('請至少選擇一個不適部位'); return; }
   lastBodyPart = Array.from(selectedBodyTags);
   const bodyPart = Array.from(selectedBodyTags).join(',');
@@ -884,6 +886,7 @@ function submitStep1(){
   if(!name){ alert('請填寫姓名'); return; }
   if(!phone){ alert('請填寫聯絡方式'); return; }
   if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912-345-678）'); return; }
+  submittingStep1 = true;
 
   go('match');
   const loadingEl = document.getElementById('match-loading');
@@ -907,7 +910,8 @@ function submitStep1(){
     .catch(err => {
       console.error('建立病人資料失敗：', err.message);
       throw err;
-    });
+    })
+    .finally(() => { submittingStep1 = false; });
 
   fetchJson(`${API_BASE}?action=match&bodyPart=${encodeURIComponent(bodyPart)}`)
     .then(data => {
@@ -956,14 +960,15 @@ function submitBooking(){
   btn.textContent = '預約中...';
 
   Promise.resolve(patientReadyPromise)
-    .then(() => {
-      if(!currentPatientId) throw new Error('病人資料尚未建立完成，請稍後再試');
+    .then((resolvedPatientId) => {
+      const pid = resolvedPatientId || currentPatientId;
+      if(!pid) throw new Error('病人資料尚未建立完成，請稍後再試');
       return fetchJson(API_BASE, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           action: 'createAppointment',
-          patientId: currentPatientId,
+          patientId: pid,
           therapistId: selectedSlot.therapistId,
           scheduleId: selectedSlot.scheduleId,
           date: selectedSlot.date,
