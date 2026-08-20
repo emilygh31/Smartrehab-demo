@@ -340,6 +340,7 @@
   .compliance-garden-mini .cgm-plot.bloom{background:var(--accent); border-color:var(--accent);}
   .compliance-garden-mini .cgm-plot svg{width:70%; height:70%;}
   .compliance-garden-label{font-size:11px; color:var(--muted); margin-top:6px;}
+  .compliance-streak{font-size:12px; color:var(--primary); font-weight:600; margin-top:6px;}
   .trendline{width:100%; height:120px;}
   .trend-axis{stroke:var(--line); stroke-width:1;}
 
@@ -700,7 +701,7 @@
       <div class="hello">請為今天的疼痛程度評分</div>
       <div class="vas-num" id="vas-num">3</div>
       <div class="vas-sub">VAS 疼痛量表</div>
-      <input type="range" min="0" max="10" value="3" id="vas-range" oninput="document.getElementById('vas-num').textContent=this.value">
+      <input type="range" min="0" max="10" value="3" id="vas-range" oninput="document.getElementById('vas-num').textContent=this.value; vasToday=parseInt(this.value,10);">
       <div class="vas-scale"><span>0 無痛</span><span>10 劇痛</span></div>
       <button class="btn-block" onclick="go('sync')">同步今日完成紀錄與疼痛日誌至診所</button>
     </section>
@@ -731,47 +732,10 @@
           </svg>
           <div>
             <div class="ring-num" style="font-size:15px; font-weight:600;">本週已完成</div>
-            <div class="ring-sub">5 天 ／ 已過 7 天</div>
-            <div class="compliance-garden-mini" id="compliance-garden-mini"></div>
-            <div class="compliance-garden-label">本週花圃進度</div>
+            <div class="ring-sub">5 天</div>
+            <div class="compliance-streak">已連續完成 3 天</div>
           </div>
         </div>
-      </div>
-
-      <div class="statcard">
-        <div class="statlabel" style="margin-bottom:4px;">復健成長</div>
-        <div class="growth-wrap" id="growth-plant" onclick="growPlant()">
-          <svg viewBox="0 0 120 140" width="103" height="120">
-            <line x1="20" y1="130" x2="100" y2="130" stroke="var(--line)" stroke-width="2" stroke-linecap="round"/>
-            <g class="plant-stage-g" data-stage="seed" style="display:none;">
-              <ellipse cx="60" cy="122" rx="10" ry="7" fill="var(--primary)"/>
-            </g>
-            <g class="plant-stage-g" data-stage="sprout" style="display:none;">
-              <path d="M60 130 L60 108" stroke="var(--primary)" stroke-width="4" stroke-linecap="round" fill="none"/>
-              <path d="M60 112 C52 108 48 100 50 94 C58 96 62 104 60 112Z" fill="var(--primary)"/>
-            </g>
-            <g class="plant-stage-g" data-stage="sapling" style="display:none;">
-              <path d="M60 130 L60 78" stroke="var(--primary)" stroke-width="4" stroke-linecap="round" fill="none"/>
-              <path d="M60 96 C48 90 42 78 46 68 C58 72 64 84 60 96Z" fill="var(--primary)"/>
-              <path d="M60 108 C72 102 78 90 74 80 C62 84 56 96 60 108Z" fill="var(--primary)"/>
-            </g>
-            <g class="plant-stage-g" data-stage="bloom" style="display:none;">
-              <path d="M60 130 L60 58" stroke="var(--primary)" stroke-width="4" stroke-linecap="round" fill="none"/>
-              <path d="M60 90 C46 84 38 70 42 58 C56 62 64 76 60 90Z" fill="var(--primary)"/>
-              <path d="M60 100 C74 94 82 80 78 68 C64 72 56 86 60 100Z" fill="var(--primary)"/>
-              <g>
-                <ellipse cx="60" cy="24" rx="8" ry="13" fill="var(--primary)"/>
-                <ellipse cx="60" cy="24" rx="8" ry="13" fill="var(--primary)" transform="rotate(60 60 37)"/>
-                <ellipse cx="60" cy="24" rx="8" ry="13" fill="var(--primary)" transform="rotate(120 60 37)"/>
-                <ellipse cx="60" cy="24" rx="8" ry="13" fill="var(--primary)" transform="rotate(180 60 37)"/>
-                <ellipse cx="60" cy="24" rx="8" ry="13" fill="var(--primary)" transform="rotate(240 60 37)"/>
-                <ellipse cx="60" cy="24" rx="8" ry="13" fill="var(--primary)" transform="rotate(300 60 37)"/>
-                <circle cx="60" cy="37" r="7" fill="var(--accent)"/>
-              </g>
-            </g>
-          </svg>
-        </div>
-        <div class="growth-sub" id="growth-sub"></div>
       </div>
 
       <div class="statcard">
@@ -791,7 +755,7 @@
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell"></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
-          <div class="heat-cell"></div>
+          <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done today"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
         </div>
         <div class="heatmap-legend">
@@ -811,13 +775,13 @@
             </linearGradient>
           </defs>
           <line x1="0" y1="90" x2="320" y2="90" class="trend-axis"/>
-          <polygon points="10,20 100,35 200,55 310,70 310,90 10,90" fill="url(#painGrad)"/>
-          <polyline points="10,20 100,35 200,55 310,70" fill="none" stroke="#276189" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <polygon id="pain-area" points="10,20 100,35 200,55 310,70 310,90 10,90" fill="url(#painGrad)"/>
+          <polyline id="pain-line" points="10,20 100,35 200,55 310,70" fill="none" stroke="#276189" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
           <circle cx="10" cy="20" r="4" fill="#276189"/><text x="4" y="12" font-size="11" fill="#7C8983">6</text>
           <circle cx="100" cy="35" r="4" fill="#276189"/><text x="94" y="27" font-size="11" fill="#7C8983">5</text>
           <circle cx="200" cy="55" r="4" fill="#276189"/><text x="194" y="47" font-size="11" fill="#7C8983">4</text>
-          <circle cx="310" cy="70" r="7" fill="#fff" stroke="#F0DD77" stroke-width="3"/>
-          <text x="296" y="90" font-size="12" fill="#F0DD77" font-weight="700">3 分（今天）</text>
+          <circle id="pain-point" cx="310" cy="70" r="7" fill="#fff" stroke="#F0DD77" stroke-width="3"/>
+          <text id="pain-label" x="310" y="44" text-anchor="end" font-size="12" fill="#8A7420" font-weight="700">3 分（今天）</text>
         </svg>
       </div>
 
@@ -859,27 +823,28 @@ function go(name){
   if(name === 'home'){ resetBookingState(); }
   if(name === 'rehab'){ renderRehabScreen(); }
   if(name === 'followup'){ renderFollowupScreen(); }
-  if(name === 'tracking'){ renderComplianceGardenMini(); }
+  if(name === 'tracking'){ updatePainChart(); }
+}
+
+// 今天選的VAS疼痛分數，預設3（跟拉桿預設值一致），拉桿oninput時會即時更新這個變數
+let vasToday = 3;
+
+// 把今天的VAS分數畫進追蹤頁的疼痛趨勢圖最後一個點（歷史三個點維持原本寫死資料，只有今天這個點是動態的）
+function updatePainChart(){
+  const line = document.getElementById('pain-line');
+  if(!line) return;
+  const y = Math.round((90 - (vasToday / 10) * 70) * 10) / 10;
+  document.getElementById('pain-area').setAttribute('points', `10,20 100,35 200,55 310,${y} 310,90 10,90`);
+  line.setAttribute('points', `10,20 100,35 200,55 310,${y}`);
+  document.getElementById('pain-point').setAttribute('cy', y);
+  // 標籤固定顯示在圖表上方空白處，不隨點的高度移動，避免被下滑的線條擋住
+  document.getElementById('pain-label').textContent = `${vasToday} 分（今天）`;
 }
 
 function renderFollowupScreen(){
   const isNew = demoMode === 'new';
   document.getElementById('followup-empty').style.display = isNew ? 'flex' : 'none';
   document.getElementById('followup-form-content').style.display = isNew ? 'none' : 'flex';
-}
-
-// 追蹤頁：遵從率甜甜圈旁的花圃縮圖（示範用寫死資料，之後串真實資料時把 completedDays/totalDays 換成 API 回傳值即可）
-function renderComplianceGardenMini(){
-  const el = document.getElementById('compliance-garden-mini');
-  if(!el) return;
-  // stages 對應本週三組復健動作各自完成狀況（示範值：2 組已開花、1 組發芽中）
-  const stages = ['bloom', 'bloom', 'sprout'];
-  const stageIcon = {
-    seed: '',
-    sprout: '<svg viewBox="0 0 24 24"><path d="M12 20 L12 12" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M12 14 C8 12 6 8 8 5 C13 7 15 11 12 14Z" fill="var(--primary)"/></svg>',
-    bloom: '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent-text)"/></svg>'
-  };
-  el.innerHTML = stages.map(stage => `<div class="cgm-plot ${stage}">${stageIcon[stage]}</div>`).join('');
 }
 
 const exerciseSets = {
@@ -1340,76 +1305,6 @@ function checkAllExercisesDone(){
   }
 }
 
-// ---------- 復健成長（連續天數的靜態視覺養成，示範資料；點擊=澆水，往前推進天數方便demo展示各階段）----------
-let streakDays = 6;
-const plantStages = [
-  { min:0, max:2, label:'種子', next:3, key:'seed' },
-  { min:3, max:6, label:'發芽', next:7, key:'sprout' },
-  { min:7, max:13, label:'小苗', next:14, key:'sapling' },
-  { min:14, max:Infinity, label:'茂盛', next:null, key:'bloom' }
-];
-
-function renderPlant(){
-  const stage = plantStages.find(s => streakDays >= s.min && streakDays <= s.max);
-  document.querySelectorAll('.plant-stage-g').forEach(g => {
-    g.style.display = (g.dataset.stage === stage.key) ? 'block' : 'none';
-  });
-  const sub = document.getElementById('growth-sub');
-  sub.textContent = stage.next
-    ? `已連續 ${streakDays} 天，再 ${stage.next - streakDays} 天長成下一階段`
-    : `已連續 ${streakDays} 天，復健植物已完整成長`;
-}
-
-function growPlant(){
-  const prevDays = streakDays;
-  streakDays = streakDays + 2 > 16 ? 0 : streakDays + 2;
-  renderPlant();
-  const wrap = document.getElementById('growth-plant');
-  wrap.classList.remove('bounce');
-  void wrap.offsetWidth;
-  wrap.classList.add('bounce');
-  spawnWaterDrops();
-  if(streakDays >= 14 && prevDays < 14){
-    spawnConfetti();
-  }
-}
-
-function spawnWaterDrops(){
-  const wrap = document.getElementById('growth-plant');
-  const offsets = [-18, 0, 18];
-  offsets.forEach((offset, i) => {
-    const drop = document.createElement('div');
-    drop.className = 'water-drop';
-    drop.style.left = `calc(50% + ${offset}px)`;
-    drop.style.animationDelay = (i * 0.08) + 's';
-    drop.innerHTML = '<svg viewBox="0 0 16 18" width="13" height="15"><path d="M8 0 C8 0 14 8 14 12 C14 15.3 11.3 18 8 18 C4.7 18 2 15.3 2 12 C2 8 8 0 8 0 Z" fill="var(--primary)"/></svg>';
-    wrap.appendChild(drop);
-    setTimeout(()=>drop.remove(), 700);
-  });
-}
-
-function spawnConfetti(){
-  const wrap = document.getElementById('growth-plant');
-  const colors = ['var(--primary)', 'var(--accent)', 'var(--primary-light)'];
-  for(let i=0; i<16; i++){
-    const p = document.createElement('div');
-    p.className = 'confetti-piece';
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 36 + Math.random() * 44;
-    const tx = Math.cos(angle) * dist;
-    const ty = Math.sin(angle) * dist - 12;
-    const rot = Math.round(Math.random() * 360);
-    p.style.background = colors[i % colors.length];
-    p.style.setProperty('--tx', tx + 'px');
-    p.style.setProperty('--ty', ty + 'px');
-    p.style.setProperty('--rot', rot + 'deg');
-    p.style.animationDelay = (Math.random() * 0.1) + 's';
-    wrap.appendChild(p);
-    setTimeout(()=>p.remove(), 1000);
-  }
-}
-renderPlant();
-
 function toggleSwitch(el){
   el.classList.toggle('on');
   const isOn = el.classList.contains('on');
@@ -1668,7 +1563,7 @@ function setMode(mode){
   } else {
     document.getElementById('home-hello').textContent = '陳先生，好久不見';
     document.getElementById('home-headline').textContent = '今天也一起完成復健吧';
-    document.getElementById('home-foot').textContent = '已經持續復健一段時間，本週已連續完成 5 天居家復健。';
+    document.getElementById('home-foot').textContent = '已經持續復健一段時間，本週已連續完成 3 天居家復健。';
     go('prereminder');
   }
 }
