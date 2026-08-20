@@ -327,6 +327,15 @@
   .ring-text{ transform:rotate(90deg); transform-origin:44px 44px; font-family:'Fraunces',serif; font-size:20px; fill:var(--ink); }
   .ring-num{font-family:'Fraunces',serif; font-size:30px;}
   .ring-sub{font-size:12px; color:var(--muted);}
+  .compliance-garden-mini{display:flex; gap:6px; margin-top:10px;}
+  .compliance-garden-mini .cgm-plot{
+    width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--line); background:var(--bg);
+  }
+  .compliance-garden-mini .cgm-plot.sprout{background:var(--primary-light); border-color:var(--primary-light);}
+  .compliance-garden-mini .cgm-plot.bloom{background:var(--accent); border-color:var(--accent);}
+  .compliance-garden-mini .cgm-plot svg{width:70%; height:70%;}
+  .compliance-garden-label{font-size:11px; color:var(--muted); margin-top:6px;}
   .trendline{width:100%; height:120px;}
   .trend-axis{stroke:var(--line); stroke-width:1;}
 
@@ -418,7 +427,28 @@
   .legend-swatch.done{background:var(--primary-light); border-color:var(--primary-light);}
   .legend-swatch.today{outline:2px solid var(--accent); outline-offset:1px;}
 
-
+  /* ---------- 復健前身體狀況提醒 Modal ---------- */
+  .bodycheck-overlay{
+    position:absolute; inset:0; z-index:40;
+    background:rgba(35,42,40,0.35);
+    display:none; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .bodycheck-overlay.show{display:flex;}
+  .bodycheck-modal{
+    background:var(--surface); border-radius:var(--radius); padding:22px 20px;
+    max-width:300px; width:100%;
+    box-shadow:0 20px 40px -18px rgba(35,42,40,0.4);
+    animation:mascotPop .3s cubic-bezier(.34,1.4,.64,1);
+  }
+  .bodycheck-icon{
+    width:44px; height:44px; border-radius:50%; background:var(--primary-light);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 12px;
+    color:var(--primary); font-size:20px;
+  }
+  .bodycheck-title{font-family:'Fraunces',serif; font-size:17px; text-align:center; margin-bottom:8px;}
+  .bodycheck-body{font-size:13px; color:var(--muted); line-height:1.7; text-align:center; margin-bottom:18px;}
+  .bodycheck-body b{color:var(--ink);}
 </style>
 </head>
 <body>
@@ -426,7 +456,7 @@
 <div class="app">
   <div class="devbar">
     <button id="mode-new" class="active" onclick="setMode('new')">示範：初診當下</button>
-    <button id="mode-return" onclick="setMode('return')">示範：時間快轉／復健第3週</button>
+    <button id="mode-return" onclick="setMode('return')">示範：時間快轉／持續復健中</button>
   </div>
 
   <div class="phone">
@@ -570,8 +600,43 @@
       <button class="btn-block" onclick="go('home')">回到首頁</button>
     </section>
 
+    <!-- PRE-APPOINTMENT REMINDER (診前自動推播) -->
+    <section class="screen" id="screen-prereminder">
+      <div class="confirm-check" style="background:var(--accent); color:var(--accent-text);">🔔</div>
+      <h2 class="confirm-title">複診提醒</h2>
+      <div class="confirm-sub">系統於看診前一天自動推播，不需治療師手動通知</div>
+
+      <div class="line-wrap">
+        <div class="line-head-bar">
+          <div class="line-avatar-lg">SR</div>
+          <div class="line-brand-lg">SmartRehab</div>
+        </div>
+        <div class="line-msg-row">
+          <div class="line-bubble">
+            <div>陳先生您好<br>提醒您明天有一場複診看診。</div>
+            <div class="line-detail">📅 <span>9/16（三）</span></div>
+            <div class="line-detail">🕐 <span>10:00</span></div>
+            <div class="line-detail">👨‍⚕️ <span>張治療師</span></div>
+            <div style="margin-top:10px; font-size:12px; color:#666;">看診前請提早 10 分鐘報到，若需要調整時段可直接於App內取消或改約。</div>
+          </div>
+          <div class="line-meta">已讀<br>上午9:00</div>
+        </div>
+      </div>
+
+      <button class="btn-block" onclick="go('home')">繼續</button>
+    </section>
+
     <!-- REHAB -->
     <section class="screen" id="screen-rehab">
+      <div class="bodycheck-overlay" id="bodycheck-overlay">
+        <div class="bodycheck-modal">
+          <div class="bodycheck-icon">!</div>
+          <div class="bodycheck-title">開始復健前</div>
+          <div class="bodycheck-body">請先評估今天的身體狀況。若有<b>明顯疼痛加劇、腫脹或不適</b>，建議先暫停今日復健，並與治療師聯繫討論。</div>
+          <button class="btn-block" style="margin-top:0;" onclick="dismissBodyCheck()">了解，開始復健</button>
+        </div>
+      </div>
+
       <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="title">居家復健</div></div>
       <div class="hello">今日自主復健清單</div>
 
@@ -653,6 +718,8 @@
           <div>
             <div class="ring-num" style="font-size:15px; font-weight:600;">本週已完成</div>
             <div class="ring-sub">5 天 ／ 已過 7 天</div>
+            <div class="compliance-garden-mini" id="compliance-garden-mini"></div>
+            <div class="compliance-garden-label">本週花圃進度</div>
           </div>
         </div>
       </div>
@@ -703,7 +770,6 @@
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell"></div>
-          <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
@@ -779,12 +845,27 @@ function go(name){
   if(name === 'home'){ resetBookingState(); }
   if(name === 'rehab'){ renderRehabScreen(); }
   if(name === 'followup'){ renderFollowupScreen(); }
+  if(name === 'tracking'){ renderComplianceGardenMini(); }
 }
 
 function renderFollowupScreen(){
   const isNew = demoMode === 'new';
   document.getElementById('followup-empty').style.display = isNew ? 'flex' : 'none';
   document.getElementById('followup-form-content').style.display = isNew ? 'none' : 'flex';
+}
+
+// 追蹤頁：遵從率甜甜圈旁的花圃縮圖（示範用寫死資料，之後串真實資料時把 completedDays/totalDays 換成 API 回傳值即可）
+function renderComplianceGardenMini(){
+  const el = document.getElementById('compliance-garden-mini');
+  if(!el) return;
+  // stages 對應本週三組復健動作各自完成狀況（示範值：2 組已開花、1 組發芽中）
+  const stages = ['bloom', 'bloom', 'sprout'];
+  const stageIcon = {
+    seed: '',
+    sprout: '<svg viewBox="0 0 24 24"><path d="M12 20 L12 12" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M12 14 C8 12 6 8 8 5 C13 7 15 11 12 14Z" fill="var(--primary)"/></svg>',
+    bloom: '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent-text)"/></svg>'
+  };
+  el.innerHTML = stages.map(stage => `<div class="cgm-plot ${stage}">${stageIcon[stage]}</div>`).join('');
 }
 
 const exerciseSets = {
@@ -852,6 +933,17 @@ function renderRehabScreen(){
     document.getElementById('timerwrap').style.display = 'none';
     document.getElementById('mascot-done').style.display = 'none';
   }
+  // 復健第3週（時間快轉）情境：每次進入居家復健頁，先提醒病人評估今天的身體狀況
+  const overlay = document.getElementById('bodycheck-overlay');
+  if(!isNew){
+    overlay.classList.add('show');
+  } else {
+    overlay.classList.remove('show');
+  }
+}
+
+function dismissBodyCheck(){
+  document.getElementById('bodycheck-overlay').classList.remove('show');
 }
 
 // ---------- 共用工具函式 ----------
@@ -1517,12 +1609,13 @@ function setMode(mode){
     document.getElementById('home-hello').textContent = '陳先生，您好';
     document.getElementById('home-headline').textContent = '讓復健，不只發生在診所裡';
     document.getElementById('home-foot').textContent = '已透過 LINE 辨識您的身份，免登入、免輸入密碼。';
+    go('home');
   } else {
     document.getElementById('home-hello').textContent = '陳先生，好久不見';
     document.getElementById('home-headline').textContent = '今天也一起完成復健吧';
-    document.getElementById('home-foot').textContent = '距離初診已滿3週，本週已連續完成 5 天居家復健。';
+    document.getElementById('home-foot').textContent = '已經持續復健一段時間，本週已連續完成 5 天居家復健。';
+    go('prereminder');
   }
-  go('home');
 }
 </script>
 </body>
