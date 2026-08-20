@@ -127,12 +127,16 @@
   }
   .brandmark .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);}
   .brandmark span{font-size:12px; letter-spacing:0.12em; color:var(--muted); text-transform:uppercase;}
-  .hero-line{
-    position:absolute; top:8px; left:20px; right:20px; width:auto; height:150px;
-    z-index:-1; opacity:0.3; pointer-events:none;
+  .myappt-decoration{
+    margin-top:auto; margin-right:-20px; margin-left:-4px; display:block; opacity:0.4; pointer-events:none; overflow:hidden;
   }
-  .hero-line path{ stroke-dasharray:400; stroke-dashoffset:400; animation:drawLine 1.4s ease forwards .1s; }
+  .myappt-decoration svg{ width:100%; height:auto; display:block; }
+  .myappt-decoration .deco-line{ stroke-dasharray:500; stroke-dashoffset:500; animation:drawLine 1.6s ease forwards .1s; }
   @keyframes drawLine{ to{ stroke-dashoffset:0; } }
+  .butterfly-wing{ transform-box:fill-box; animation:wingFlap 1.6s ease-in-out infinite; }
+  .butterfly-wing.right{ transform-origin:0% 50%; }
+  .butterfly-wing.left{ transform-origin:100% 50%; }
+  @keyframes wingFlap{ 0%,100%{ transform:scaleX(1); } 50%{ transform:scaleX(0.35); } }
   .hello{font-size:14px; color:var(--muted); margin-top:6px;}
   .hello b{color:var(--ink);}
   h1.headline{font-size:26px; line-height:1.3; margin:6px 0 4px;}
@@ -464,7 +468,6 @@
     <!-- HOME -->
     <section class="screen active" id="screen-home">
       <div class="brandmark"><div class="dot"></div><span>SmartRehab</span></div>
-      <svg class="hero-line" viewBox="0 0 380 150" aria-hidden="true"><path d="M4 60 C 60 10, 100 100, 150 50 S 250 10, 300 70 S 360 110, 376 40" fill="none" stroke="#276189" stroke-width="2.5" stroke-linecap="round"/></svg>
       <div class="hello" id="home-hello">陳先生，您好</div>
       <h1 class="headline" id="home-headline">讓復健，不只發生在診所裡</h1>
       <div class="hello" id="home-subheadline" style="margin-top:-8px;">陪自己的身體，慢慢耕耘、慢慢康復</div>
@@ -486,6 +489,17 @@
       </button>
       <button class="cta-secondary" onclick="go('followup')">預約複診 <span>→</span></button>
       <button class="btn-ghost" onclick="go('myappt')" style="text-align:left;">查詢／取消預約</button>
+
+      <div class="myappt-decoration">
+        <svg viewBox="0 0 320 90" aria-hidden="true">
+          <path class="deco-line" d="M4 45 C 50 10, 90 80, 140 40 S 230 10, 270 55 S 330 75, 360 20" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round"/>
+          <g transform="translate(250,38) rotate(-15)">
+            <ellipse cx="0" cy="0" rx="1.6" ry="7" fill="var(--primary)"/>
+            <path class="butterfly-wing right" d="M0 -3 C 10 -14, 20 -10, 16 0 C 20 8, 10 12, 0 3 Z" fill="var(--accent)"/>
+            <path class="butterfly-wing left" d="M0 -3 C -10 -14, -20 -10, -16 0 C -20 8, -10 12, 0 3 Z" fill="var(--accent)"/>
+          </g>
+        </svg>
+      </div>
 
       <div class="homefoot" id="home-foot">已透過 LINE 辨識您的身份，免登入、免輸入密碼。</div>
     </section>
@@ -603,7 +617,7 @@
     <!-- PRE-APPOINTMENT REMINDER (診前自動推播) -->
     <section class="screen" id="screen-prereminder">
       <div class="confirm-check" style="background:var(--accent); color:var(--accent-text);">🔔</div>
-      <h2 class="confirm-title">複診提醒</h2>
+      <h2 class="confirm-title">回診提醒</h2>
       <div class="confirm-sub">系統於看診前一天自動推播，不需治療師手動通知</div>
 
       <div class="line-wrap">
@@ -613,11 +627,11 @@
         </div>
         <div class="line-msg-row">
           <div class="line-bubble">
-            <div>陳先生您好<br>提醒您明天有一場複診看診。</div>
+            <div>陳先生您好<br>物理治療回診</div>
             <div class="line-detail">📅 <span>9/16（三）</span></div>
             <div class="line-detail">🕐 <span>10:00</span></div>
             <div class="line-detail">👨‍⚕️ <span>張治療師</span></div>
-            <div style="margin-top:10px; font-size:12px; color:#666;">看診前請提早 10 分鐘報到，若需要調整時段可直接於App內取消或改約。</div>
+            <div style="margin-top:10px; font-size:12px; color:#666;">看診前請提早 10 分鐘報到，若需要調整時段可於App內改約。</div>
           </div>
           <div class="line-meta">已讀<br>上午9:00</div>
         </div>
@@ -1526,6 +1540,18 @@ function submitFollowupBooking(){
 }
 
 // ---------- 查詢／取消預約 ----------
+// 時間快轉／複診情境下，額外疊加展示一筆9/16複診（不寫入真實Sheets，避免patient_id尚未建立的問題）
+// 這筆距離看診時間不足24小時，用來展示「不開放自行取消、只能改約」的機制
+const DEMO_FOLLOWUP_APPT = {
+  appointment_id: 'demo-followup-0916',
+  date: '2026-09-16',
+  time: '10:00',
+  therapist_name: '張治療師',
+  status: 'confirmed',
+  isDemo: true
+};
+const DEMO_FOLLOWUP_APPTS = [DEMO_FOLLOWUP_APPT];
+
 function lookupAppointments(){
   const phone = document.getElementById('lookup-phone').value.trim();
   const listEl = document.getElementById('appt-list');
@@ -1536,7 +1562,8 @@ function lookupAppointments(){
   fetchJson(`${API_BASE}?action=myAppointments&phone=${encodeURIComponent(phone)}`)
     .then(data => {
       if(data.error) throw new Error(data.error);
-      renderAppointments(data);
+      const merged = demoMode === 'return' ? [...data, ...DEMO_FOLLOWUP_APPTS] : data;
+      renderAppointments(merged);
     })
     .catch(err => {
       listEl.innerHTML = `<div class="tcard" style="text-align:center; color:var(--danger);">查詢失敗：${err.message}</div>`;
@@ -1566,15 +1593,37 @@ function renderAppointments(list){
     return (a.date + a.time).localeCompare(b.date + b.time);
   });
   const stageBadge = { upcoming: '已確認', past: '已完成', cancelled: '已取消' };
-  listEl.innerHTML = sorted.map(a => `
-    <div class="tcard">
+  listEl.innerHTML = sorted.map(a => {
+    const cancelable = a.stage === 'upcoming' && isCancelable(a);
+    let actionHtml = '';
+    if(a.stage === 'upcoming'){
+      actionHtml = cancelable
+        ? `<button class="btn-ghost" style="margin-top:10px; width:100%;" onclick="cancelAppt('${escapeHtml(a.appointment_id)}')">取消這筆預約</button>`
+        : `<div style="margin-top:10px; font-size:12px; color:var(--muted); text-align:center;">距離看診不足24小時，如需調整請電洽診所</div>`;
+    }
+    return `
+    <div class="tcard" data-appt-id="${escapeHtml(a.appointment_id)}">
       <div class="tcard-head">
         <div class="tcard-name">${escapeHtml(a.date.slice(5).replace('-','/'))} ${escapeHtml(a.time)}　${escapeHtml(a.therapist_name)}</div>
         <div class="badge" style="${a.stage!=='upcoming' ? 'background:var(--line);color:var(--muted);' : ''}">${stageBadge[a.stage]}</div>
       </div>
-      ${a.stage==='upcoming' ? `<button class="btn-ghost" style="margin-top:10px; width:100%;" onclick="cancelAppt('${escapeHtml(a.appointment_id)}')">取消這筆預約</button>` : ''}
+      ${actionHtml}
     </div>
-  `).join('');
+  `;
+  }).join('');
+}
+
+// 判斷距離看診時間是否還有24小時以上，未滿24小時不開放病人自行取消
+function isCancelable(apt){
+  const apptTime = new Date(`${apt.date}T${apt.time}:00`);
+  const hoursUntil = (apptTime.getTime() - nowDateTime().getTime()) / (1000 * 60 * 60);
+  return hoursUntil >= 24;
+}
+
+function nowDateTime(){
+  // 固定11:00，讓9/16 10:00這筆複診落在24小時門檻內，展示鎖住取消按鈕的效果
+  if(demoMode === 'return'){ return new Date('2026-09-15T11:00:00'); }
+  return new Date();
 }
 
 function todayStr(){
@@ -1588,6 +1637,12 @@ function todayStr(){
 
 function cancelAppt(appointmentId){
   if(!confirm('確定要取消這筆預約嗎？')) return;
+  if(appointmentId === DEMO_FOLLOWUP_APPT.appointment_id){
+    // 這筆是疊加展示的示範資料，只做畫面上的即時移除，不會呼叫真實API
+    const el = document.querySelector(`[data-appt-id="${appointmentId}"]`);
+    if(el) el.remove();
+    return;
+  }
   fetchJson(API_BASE, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
