@@ -168,6 +168,14 @@
     cursor:pointer;
   }
   .homefoot{margin-top:auto; font-size:11px; color:var(--muted); line-height:1.6;}
+  .link-row{display:flex; align-items:center; justify-content:center; gap:14px; margin-top:6px;}
+  .link-item{
+    background:none; border:none; color:var(--muted); font-size:13px;
+    font-family:'IBM Plex Sans',sans-serif; cursor:pointer; padding:4px 2px;
+    text-decoration:underline; text-underline-offset:3px;
+  }
+  .link-item:hover{color:var(--primary);}
+  .link-divider{width:1px; height:12px; background:var(--line);}
 
   /* ---------- FORM ---------- */
   .field label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px;}
@@ -212,7 +220,7 @@
   }
   .tcard.top{border-color:var(--primary);}
   .tcard-head{display:flex; justify-content:space-between; align-items:flex-start;}
-  .tcard-name{font-family:'Fraunces',serif; font-size:17px; font-weight:600;}
+  .tcard-name{font-family:'Fraunces',serif; font-size:18px; font-weight:600;}
   .badge{
     background:var(--primary-light); color:var(--primary); font-size:11px; font-weight:600;
     padding:3px 9px; border-radius:999px;
@@ -221,7 +229,7 @@
   .tag{font-size:11px; color:var(--muted); border:1px solid var(--line); padding:3px 8px; border-radius:999px;}
   .slots{display:flex; flex-wrap:wrap; gap:8px;}
   .slot{
-    border:1px solid var(--line); border-radius:var(--radius-sm); padding:9px 12px; font-size:13px;
+    border:1px solid var(--line); border-radius:var(--radius-sm); padding:9px 12px; font-size:14px;
     cursor:pointer; background:var(--surface);
   }
   .slot.selected{background:var(--primary); color:#fff; border-color:var(--primary);}
@@ -241,11 +249,11 @@
   .line-brand-lg{font-size:13px; font-weight:700; color:#fff;}
   .line-msg-row{display:flex; align-items:flex-end; gap:6px;}
   .line-bubble{
-    background:#fff; border-radius:14px 14px 14px 3px; padding:14px 16px; font-size:13.5px; line-height:1.75;
+    background:#fff; border-radius:14px 14px 14px 3px; padding:14px 16px; font-size:15px; line-height:1.75;
     flex:1;
   }
   .line-meta{font-size:10px; color:rgba(255,255,255,0.85); text-align:right; line-height:1.5; flex:none; white-space:nowrap;}
-  .line-detail{display:flex; gap:8px; align-items:center; margin-top:4px; font-size:13px;}
+  .line-detail{display:flex; gap:8px; align-items:center; margin-top:4px; font-size:14px;}
 
   /* ---------- REHAB ---------- */
   #rehab-content{display:flex; flex-direction:column; gap:18px;}
@@ -258,7 +266,7 @@
   }
   .exitem.done{background:var(--primary-light);}
   .exitem-wrap:has(.exitem.done){border-color:var(--primary);}
-  .exname{font-size:14px; font-weight:600;}
+  .exname{font-size:15px; font-weight:600;}
   .exmeta{font-size:12px; color:var(--muted);}
   .exdone-badge{font-size:12px; color:var(--primary); font-weight:600;}
   .startbtn{
@@ -330,7 +338,7 @@
   @keyframes ringIn{ from{ stroke-dashoffset:238.76; } }
   .ring-text{ transform:rotate(90deg); transform-origin:44px 44px; font-family:'Fraunces',serif; font-size:20px; fill:var(--ink); }
   .ring-num{font-family:'Fraunces',serif; font-size:30px;}
-  .ring-sub{font-size:12px; color:var(--muted);}
+  .ring-sub{font-size:16px; color:var(--ink); font-weight:700;}
   .compliance-garden-mini{display:flex; gap:6px; margin-top:10px;}
   .compliance-garden-mini .cgm-plot{
     width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center;
@@ -488,8 +496,11 @@
         </span>
         <span>→</span>
       </button>
-      <button class="cta-secondary" onclick="go('followup')">預約複診 <span>→</span></button>
-      <button class="btn-ghost" onclick="go('myappt')" style="text-align:left;">查詢／取消預約</button>
+      <div class="link-row">
+        <button class="link-item" onclick="go('followup')">預約複診</button>
+        <span class="link-divider"></span>
+        <button class="link-item" onclick="go('myappt')">查詢／取消預約</button>
+      </div>
 
       <div class="myappt-decoration">
         <svg viewBox="0 0 320 90" aria-hidden="true">
@@ -619,7 +630,7 @@
     <section class="screen" id="screen-prereminder">
       <div class="confirm-check" style="background:var(--accent); color:var(--accent-text);">🔔</div>
       <h2 class="confirm-title">回診提醒</h2>
-      <div class="confirm-sub">系統於看診前一天自動推播，不需治療師手動通知</div>
+      <div class="confirm-sub">系統於看診前一天自動推播，不需要治療師手動通知</div>
 
       <div class="line-wrap">
         <div class="line-head-bar">
@@ -719,7 +730,7 @@
       <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="title">復健追蹤</div></div>
 
       <div class="mascot-row mascot-pop">
-        <div class="mascot-msg">本週已經完成 <b>5 天</b> 復健了，繼續保持這個節奏，你做得很好！</div>
+        <div class="mascot-msg">本週已經完成 <b>4 天</b> 復健了，繼續保持這個節奏，你做得很好！</div>
       </div>
 
       <div class="statcard">
@@ -727,12 +738,12 @@
         <div class="ring-wrap">
           <svg width="88" height="88" viewBox="0 0 88 88" class="progress-ring">
             <circle cx="44" cy="44" r="38" class="ring-track"/>
-            <circle cx="44" cy="44" r="38" class="ring-fill" style="stroke-dasharray:238.76; stroke-dashoffset:69.24;"/>
-            <text x="44" y="50" text-anchor="middle" class="ring-text">71%</text>
+            <circle cx="44" cy="44" r="38" class="ring-fill" style="stroke-dasharray:238.76; stroke-dashoffset:47.75;"/>
+            <text x="44" y="50" text-anchor="middle" class="ring-text">80%</text>
           </svg>
           <div>
             <div class="ring-num" style="font-size:15px; font-weight:600;">本週已完成</div>
-            <div class="ring-sub">5 天</div>
+            <div class="ring-sub">4 天</div>
             <div class="compliance-streak">已連續完成 3 天</div>
           </div>
         </div>
@@ -752,11 +763,12 @@
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
-          <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell"></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done today"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
+          <div class="heat-cell"></div>
+          <div class="heat-cell"></div>
         </div>
         <div class="heatmap-legend">
           <span class="legend-item"><span class="legend-swatch done"></span>已完成復健</span>
