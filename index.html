@@ -209,8 +209,9 @@
   .bd-zone.selected{fill:var(--accent); stroke:var(--accent); opacity:0.95;}
   .bodyselected{text-align:center; font-size:12.5px; color:var(--primary); font-weight:600; margin-top:8px;}
   textarea{
-    width:100%; min-height:64px; padding:12px 14px; border-radius:var(--radius-sm);
+    width:100%; min-height:64px; max-height:120px; padding:12px 14px; border-radius:var(--radius-sm);
     border:1px solid var(--line); font-family:'IBM Plex Sans',sans-serif; font-size:14px; resize:none;
+    overflow-y:auto;
   }
   .step-eyebrow{font-size:11px; letter-spacing:0.1em; color:var(--accent-text); font-weight:600; text-transform:uppercase;}
 
@@ -583,7 +584,7 @@
         </div>
         <div class="bodyselected" id="body-selected-label">請點選人體圖上的不適部位（可複選）</div>
       </div>
-      <div class="field"><label>症狀描述（給治療師參考，不影響配對）</label><textarea id="in-symptom" placeholder="請描述您的症狀"></textarea></div>
+      <div class="field"><label>症狀描述（給治療師參考，不影響配對）</label><textarea id="in-symptom" placeholder="請描述您的症狀" maxlength="200"></textarea></div>
       <button class="btn-block" onclick="submitStep1()">下一步：查看推薦治療師</button>
     </section>
 
@@ -759,7 +760,6 @@
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell"></div>
-          <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
@@ -978,6 +978,8 @@ function fetchJson(url, options){
 }
 
 // ---------- 真實 API 串接（第一段：表單 → 治療師配對）----------
+// [已知限制] API_BASE 目前暴露在前端原始碼中，且Apps Script端未做任何驗證。
+// 正式上線前需在Apps Script加入API金鑰驗證或改走有驗證機制的後端，避免任意呼叫寫入資料。
 const API_BASE = 'https://script.google.com/macros/s/AKfycby8y5rY7l4Gdtc2w1D0qw6vnxikdC3Zy-PPtwA7yl_Q8Drp3vBDS2VEzdHGEMja-qxnxw/exec';
 let currentPatientId = null;
 let patientReadyPromise = null;
@@ -993,7 +995,7 @@ function submitStep1(){
   const symptomNote = document.getElementById('in-symptom').value;
   if(!name){ alert('請填寫姓名'); return; }
   if(!phone){ alert('請填寫聯絡方式'); return; }
-  if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912-345-678）'); return; }
+  if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912345678 或 0912-345-678）'); return; }
   submittingStep1 = true;
 
   go('match');
@@ -1331,7 +1333,7 @@ function lookupFollowup(){
   const phone = document.getElementById('followup-phone').value.trim();
   const resultEl = document.getElementById('followup-result');
   if(!phone){ alert('請輸入聯絡方式'); return; }
-  if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912-345-678）'); return; }
+  if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912345678 或 0912-345-678）'); return; }
   resultEl.innerHTML = '<div class="tcard" style="text-align:center; color:var(--muted);"><div class="spinner"></div>查詢中...</div>';
 
   fetchJson(`${API_BASE}?action=followupInfo&phone=${encodeURIComponent(phone)}`)
@@ -1463,7 +1465,7 @@ function lookupAppointments(){
   const phone = document.getElementById('lookup-phone').value.trim();
   const listEl = document.getElementById('appt-list');
   if(!phone){ alert('請輸入聯絡方式'); return; }
-  if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912-345-678）'); return; }
+  if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912345678 或 0912-345-678）'); return; }
   listEl.innerHTML = '<div class="tcard" style="text-align:center; color:var(--muted);"><div class="spinner"></div>查詢中...</div>';
 
   fetchJson(`${API_BASE}?action=myAppointments&phone=${encodeURIComponent(phone)}`)
