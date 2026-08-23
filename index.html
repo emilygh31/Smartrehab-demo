@@ -1035,13 +1035,13 @@ function renderSlotsSection(slots, itemRenderer){
   if(!later.length) return nearHtml;
   const toggleId = 'slot-more-' + (slotToggleCounter++);
   const laterHtml = later.map(itemRenderer).join('');
-  return `${nearHtml}<div id="${toggleId}" style="display:none; width:100%; gap:8px; flex-wrap:wrap;">${laterHtml}</div><button type="button" class="link-item" style="width:100%; text-align:center; margin-top:4px;" onclick="toggleMoreSlots('${toggleId}', this)">查看下週以後的時段 ▾</button>`;
+  return `${nearHtml}<div id="${toggleId}" style="display:none; width:100%; gap:8px; flex-wrap:wrap;">${laterHtml}</div><button type="button" class="link-item" style="width:100%; text-align:center; margin-top:4px;" onclick="toggleMoreSlots('${toggleId}', this)">查看這週以後的時段 ▾</button>`;
 }
 function toggleMoreSlots(toggleId, btnEl){
   const moreEl = document.getElementById(toggleId);
   const showing = moreEl.style.display === 'flex';
   moreEl.style.display = showing ? 'none' : 'flex';
-  btnEl.textContent = showing ? '查看下週以後的時段 ▾' : '收合時段 ▴';
+  btnEl.textContent = showing ? '查看這週以後的時段 ▾' : '收合時段 ▴';
 }
 
 function buildConfirmMessage(kind){
