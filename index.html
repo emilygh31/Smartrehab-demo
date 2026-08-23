@@ -989,6 +989,39 @@ function isDemoScriptPhone(phone){
   return phone.replace(/-/g, '') === DEMO_SCRIPT_PHONE;
 }
 
+// ---------- 音效（純JS合成，不需外部音檔，避免demo現場網路問題） ----------
+let audioCtx = null;
+function getAudioCtx(){
+  if(!audioCtx){ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+  if(audioCtx.state === 'suspended'){ audioCtx.resume(); }
+  return audioCtx;
+}
+function playTone(freq, startTime, duration, volume){
+  const ctx = getAudioCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(volume, ctx.currentTime + startTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(ctx.currentTime + startTime);
+  osc.stop(ctx.currentTime + startTime + duration);
+}
+// 完成一組動作時的短促提示音
+function playPopSound(){
+  try{ playTone(880, 0, 0.12, 0.15); }catch(e){}
+}
+// 全部完成／預約成功時的三音上升慶祝音
+function playChimeSound(){
+  try{
+    playTone(523.25, 0, 0.18, 0.12);
+    playTone(659.25, 0.12, 0.18, 0.12);
+    playTone(783.99, 0.24, 0.28, 0.14);
+  }catch(e){}
+}
+
 // 時段分界日：這天之前算「近期」時段，預設直接顯示；這天(含)以後算「下週以後」，
 // 收合在「查看更多時段」按鈕後面，避免demo正式流程一開始就被看到很後面的可約時間
 const NEAR_SLOT_CUTOFF = '2026-09-10';
@@ -1150,6 +1183,7 @@ function submitBooking(){
       document.getElementById('line-msg').innerHTML = buildConfirmMessage('new');
       document.getElementById('home-hello').textContent = `${lastPatientName}，您好`;
       go('confirm');
+      playChimeSound();
       btn.textContent = '確認預約';
       btn.disabled = false;
     })
@@ -1260,6 +1294,7 @@ function completeActiveExercise(){
   const plotIndex = Array.from(document.querySelectorAll('#exlist .exitem-wrap')).indexOf(wrap);
   updateGardenStages();
   spawnPlotWaterDrops(plotIndex);
+  playPopSound();
 
   if(done < total){
     const prog = wrap.querySelector('.exprogress');
@@ -1376,6 +1411,7 @@ function checkAllExercisesDone(){
     ring.className = 'celebrate-ring';
     document.body.appendChild(ring);
     setTimeout(()=>ring.remove(), 800);
+    playChimeSound();
   }
 }
 
@@ -1505,6 +1541,7 @@ function submitFollowupBooking(){
     document.getElementById('line-t').textContent = followupSlot.therapistName;
     document.getElementById('line-msg').innerHTML = buildConfirmMessage('followup');
     go('confirm');
+    playChimeSound();
     btn.textContent = '確認複診預約';
     btn.disabled = false;
     return;
@@ -1529,6 +1566,7 @@ function submitFollowupBooking(){
       document.getElementById('line-t').textContent = followupSlot.therapistName;
       document.getElementById('line-msg').innerHTML = buildConfirmMessage('followup');
       go('confirm');
+      playChimeSound();
       btn.textContent = '確認複診預約';
       btn.disabled = false;
     })
