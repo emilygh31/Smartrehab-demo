@@ -545,8 +545,8 @@
             <ellipse class="bd-zone" data-tag="肩膀" cx="140" cy="70" rx="17" ry="11"/>
             <rect class="bd-zone" data-tag="手臂" x="26" y="88" width="38" height="60" rx="8"/>
             <rect class="bd-zone" data-tag="手臂" x="136" y="88" width="38" height="60" rx="8"/>
-            <circle class="bd-zone" data-tag="手肘" cx="33" cy="155" r="12"/>
-            <circle class="bd-zone" data-tag="手肘" cx="167" cy="155" r="12"/>
+            <circle class="bd-zone" data-tag="手肘、手掌" cx="33" cy="155" r="12"/>
+            <circle class="bd-zone" data-tag="手肘、手掌" cx="167" cy="155" r="12"/>
             <rect class="bd-zone" data-tag="髖部" x="66" y="188" width="68" height="26" rx="8"/>
             <rect class="bd-zone" data-tag="腿部" x="62" y="216" width="30" height="128" rx="8"/>
             <rect class="bd-zone" data-tag="腿部" x="108" y="216" width="30" height="128" rx="8"/>
@@ -640,7 +640,7 @@
         </div>
         <div class="line-msg-row">
           <div class="line-bubble">
-            <div>陳先生您好<br>物理治療回診</div>
+            <div id="prereminder-msg">XX先生/小姐您好<br>物理治療回診</div>
             <div class="line-detail">📅 <span>9/16（三）</span></div>
             <div class="line-detail">🕐 <span>10:00</span></div>
             <div class="line-detail">👨‍⚕️ <span>張治療師</span></div>
@@ -731,7 +731,7 @@
       <div class="topbar"><div class="back" onclick="go('home')">←</div><div class="title">復健追蹤</div></div>
 
       <div class="mascot-row mascot-pop">
-        <div class="mascot-msg">本週已經完成 <b>4 天</b> 復健了，繼續保持這個節奏，你做得很好！</div>
+        <div class="mascot-msg">本週已經完成 <b>3 天</b> 復健了，繼續保持這個節奏，你做得很好！</div>
       </div>
 
       <div class="statcard">
@@ -739,12 +739,12 @@
         <div class="ring-wrap">
           <svg width="88" height="88" viewBox="0 0 88 88" class="progress-ring">
             <circle cx="44" cy="44" r="38" class="ring-track"/>
-            <circle cx="44" cy="44" r="38" class="ring-fill" style="stroke-dasharray:238.76; stroke-dashoffset:47.75;"/>
-            <text x="44" y="50" text-anchor="middle" class="ring-text">80%</text>
+            <circle cx="44" cy="44" r="38" class="ring-fill" style="stroke-dasharray:238.76; stroke-dashoffset:59.69;"/>
+            <text x="44" y="50" text-anchor="middle" class="ring-text">75%</text>
           </svg>
           <div>
             <div class="ring-num" style="font-size:15px; font-weight:600;">本週已完成</div>
-            <div class="ring-sub">4 天</div>
+            <div class="ring-sub">3 天</div>
             <div class="compliance-streak">已連續完成 3 天</div>
           </div>
         </div>
@@ -767,6 +767,7 @@
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
           <div class="heat-cell done today"><svg class="sprout-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(60 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(120 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(180 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(240 12 12)"/><ellipse cx="12" cy="6.5" rx="2.6" ry="4.4" fill="var(--primary)" transform="rotate(300 12 12)"/><circle cx="12" cy="12" r="2.3" fill="var(--accent)"/></svg></div>
+          <div class="heat-cell"></div>
           <div class="heat-cell"></div>
           <div class="heat-cell"></div>
         </div>
@@ -953,10 +954,39 @@ function isValidPhone(phone){
   return /^09\d{2}-?\d{3}-?\d{3}$/.test(phone);
 }
 
+// demo腳本固定使用的手機號碼，只有輸入這支號碼時才會在「時間快轉」模式觸發demo疊加假資料，
+// 避免任何隨便輸入的號碼都看得到一樣的假預約紀錄
+const DEMO_SCRIPT_PHONE = '0912345678';
+function isDemoScriptPhone(phone){
+  return phone.replace(/-/g, '') === DEMO_SCRIPT_PHONE;
+}
+
+// 時段分界日：這天之前算「近期」時段，預設直接顯示；這天(含)以後算「下週以後」，
+// 收合在「查看更多時段」按鈕後面，避免demo正式流程一開始就被看到很後面的可約時間
+const NEAR_SLOT_CUTOFF = '2026-09-10';
+let slotToggleCounter = 0;
+function renderSlotsSection(slots, itemRenderer){
+  if(!slots.length) return '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>';
+  const near = slots.filter(s => s.date < NEAR_SLOT_CUTOFF);
+  const later = slots.filter(s => s.date >= NEAR_SLOT_CUTOFF);
+  const nearHtml = near.map(itemRenderer).join('');
+  if(!later.length) return nearHtml;
+  const toggleId = 'slot-more-' + (slotToggleCounter++);
+  const laterHtml = later.map(itemRenderer).join('');
+  return `${nearHtml}<div id="${toggleId}" style="display:none; width:100%; gap:8px; flex-wrap:wrap;">${laterHtml}</div><button type="button" class="link-item" style="width:100%; text-align:center; margin-top:4px;" onclick="toggleMoreSlots('${toggleId}', this)">查看下週以後的時段 ▾</button>`;
+}
+function toggleMoreSlots(toggleId, btnEl){
+  const moreEl = document.getElementById(toggleId);
+  const showing = moreEl.style.display === 'flex';
+  moreEl.style.display = showing ? 'none' : 'flex';
+  btnEl.textContent = showing ? '查看下週以後的時段 ▾' : '收合時段 ▴';
+}
+
 function buildConfirmMessage(kind){
+  const displayName = kind === 'followup' ? '陳先生' : (lastPatientName || '陳先生');
   return kind === 'followup'
-    ? '陳先生您好<br>您的複診已預約成功。'
-    : '陳先生您好<br>您的初診評估已預約成功。';
+    ? `${escapeHtml(displayName)}您好<br>您的複診已預約成功。`
+    : `${escapeHtml(displayName)}您好<br>您的初診評估已預約成功。`;
 }
 
 function resetBookingState(){
@@ -983,6 +1013,7 @@ function fetchJson(url, options){
 const API_BASE = 'https://script.google.com/macros/s/AKfycby8y5rY7l4Gdtc2w1D0qw6vnxikdC3Zy-PPtwA7yl_Q8Drp3vBDS2VEzdHGEMja-qxnxw/exec';
 let currentPatientId = null;
 let patientReadyPromise = null;
+let lastPatientName = '';
 
 let submittingStep1 = false;
 function submitStep1(){
@@ -996,6 +1027,7 @@ function submitStep1(){
   if(!name){ alert('請填寫姓名'); return; }
   if(!phone){ alert('請填寫聯絡方式'); return; }
   if(!isValidPhone(phone)){ alert('請輸入正確的手機號碼格式（例如 0912345678 或 0912-345-678）'); return; }
+  lastPatientName = name;
   submittingStep1 = true;
 
   go('match');
@@ -1052,12 +1084,10 @@ function renderMatchResults(therapists){
       <div class="tcard-head"><div class="tcard-name">${escapeHtml(t.name)}</div><div class="badge">推薦</div></div>
       <div class="tags">${t.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${escapeHtml(tag)}</span>`).join('')}</div>
       <div class="slots">
-        ${t.available_slots.length
-          ? t.available_slots.map(s=> s.is_booked
-              ? `<div class="slot full">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)} 額滿</div>`
-              : `<div class="slot" data-t="${escapeHtml(t.name)}" data-tid="${escapeHtml(t.therapist_id)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
-            ).join('')
-          : '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>'}
+        ${renderSlotsSection(t.available_slots, s => s.is_booked
+          ? `<div class="slot full">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)} 額滿</div>`
+          : `<div class="slot" data-t="${escapeHtml(t.name)}" data-tid="${escapeHtml(t.therapist_id)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
+        )}
       </div>
     </div>
   `).join('');
@@ -1089,6 +1119,7 @@ function submitBooking(){
     .then(data => {
       if(data.error) throw new Error(data.error);
       document.getElementById('line-msg').innerHTML = buildConfirmMessage('new');
+      document.getElementById('home-hello').textContent = `${lastPatientName}，您好`;
       go('confirm');
       btn.textContent = '確認預約';
       btn.disabled = false;
@@ -1329,6 +1360,21 @@ function toggleSwitch(el){
 let followupPatientId = null;
 let followupSlot = null;
 
+// 「時間快轉／持續復健中」demo情境下，真實01_patients已依檢查清單清空，
+// 若真實API查無此病患，改用這筆demo專用資料疊加顯示，維持「已有固定治療師」的故事線一致，不寫入真實Sheets
+const DEMO_FOLLOWUP_PATIENT_ID = 'demo-patient-0001';
+const DEMO_FOLLOWUP_INFO = {
+  patient_id: DEMO_FOLLOWUP_PATIENT_ID,
+  therapist_id: 'demo-t01',
+  therapist_name: '張治療師',
+  specialty_tags: ['下背部', '核心訓練'],
+  last_visit_date: '2026-09-01',
+  available_slots: [
+    { schedule_id: 'demo-s1', date: '2026-09-20', time: '10:00', is_booked: false },
+    { schedule_id: 'demo-s2', date: '2026-09-20', time: '14:00', is_booked: false }
+  ]
+};
+
 function lookupFollowup(){
   const phone = document.getElementById('followup-phone').value.trim();
   const resultEl = document.getElementById('followup-result');
@@ -1342,6 +1388,10 @@ function lookupFollowup(){
       renderFollowup(data);
     })
     .catch(err => {
+      if(demoMode === 'return' && isDemoScriptPhone(phone)){
+        renderFollowup(DEMO_FOLLOWUP_INFO);
+        return;
+      }
       resultEl.innerHTML = `<div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
         <div class="empty-title">${err.message}</div>
@@ -1361,10 +1411,10 @@ function renderFollowup(data){
       <div class="tags">${data.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${escapeHtml(tag)}</span>`).join('')}</div>
       <div style="font-size:11px; color:var(--muted); margin-bottom:10px;">上次看診：${escapeHtml(data.last_visit_date.slice(5).replace('-','/'))}</div>
       <div class="slots">
-        ${data.available_slots.length ? data.available_slots.map(s => s.is_booked
-            ? `<div class="slot full">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)} 額滿</div>`
-            : `<div class="slot" data-tid="${escapeHtml(data.therapist_id)}" data-tname="${escapeHtml(data.therapist_name)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickFollowupSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
-          ).join('') : '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>'}
+        ${renderSlotsSection(data.available_slots, s => s.is_booked
+          ? `<div class="slot full">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)} 額滿</div>`
+          : `<div class="slot" data-tid="${escapeHtml(data.therapist_id)}" data-tname="${escapeHtml(data.therapist_name)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickFollowupSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
+        )}
       </div>
     </div>
     <div class="button-group">
@@ -1387,10 +1437,10 @@ function showOtherTherapists(){
           <div class="tcard-head"><div class="tcard-name">${escapeHtml(t.name)}</div></div>
           <div class="tags">${t.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${escapeHtml(tag)}</span>`).join('')}</div>
           <div class="slots">
-            ${t.available_slots.length ? t.available_slots.map(s => s.is_booked
-                ? `<div class="slot full">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)} 額滿</div>`
-                : `<div class="slot" data-tid="${escapeHtml(t.therapist_id)}" data-tname="${escapeHtml(t.name)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickFollowupSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
-              ).join('') : '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>'}
+            ${renderSlotsSection(t.available_slots, s => s.is_booked
+              ? `<div class="slot full">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)} 額滿</div>`
+              : `<div class="slot" data-tid="${escapeHtml(t.therapist_id)}" data-tname="${escapeHtml(t.name)}" data-sid="${escapeHtml(s.schedule_id)}" data-date="${escapeHtml(s.date)}" data-time="${escapeHtml(s.time)}" onclick="pickFollowupSlot(this)">${escapeHtml(s.date.slice(5).replace('-','/'))} ${escapeHtml(s.time)}</div>`
+            )}
           </div>
         </div>
       `).join('');
@@ -1418,6 +1468,18 @@ function submitFollowupBooking(){
   const btn = document.getElementById('followup-confirm-btn');
   btn.disabled = true;
   btn.textContent = '預約中...';
+
+  // demo專用病患（時間快轉情境下真實查無資料時的疊加顯示），不呼叫真實API，直接模擬預約成功
+  if(followupPatientId === DEMO_FOLLOWUP_PATIENT_ID){
+    document.getElementById('line-date').textContent = followupSlot.date.slice(5).replace('-','/');
+    document.getElementById('line-time').textContent = followupSlot.time;
+    document.getElementById('line-t').textContent = followupSlot.therapistName;
+    document.getElementById('line-msg').innerHTML = buildConfirmMessage('followup');
+    go('confirm');
+    btn.textContent = '確認複診預約';
+    btn.disabled = false;
+    return;
+  }
 
   fetchJson(API_BASE, {
     method: 'POST',
@@ -1471,7 +1533,7 @@ function lookupAppointments(){
   fetchJson(`${API_BASE}?action=myAppointments&phone=${encodeURIComponent(phone)}`)
     .then(data => {
       if(data.error) throw new Error(data.error);
-      const merged = demoMode === 'return' ? [...data, ...DEMO_FOLLOWUP_APPTS] : data;
+      const merged = (demoMode === 'return' && isDemoScriptPhone(phone)) ? [...data, ...DEMO_FOLLOWUP_APPTS] : data;
       renderAppointments(merged);
     })
     .catch(err => {
@@ -1575,9 +1637,11 @@ function setMode(mode){
     document.getElementById('home-foot').textContent = '已透過 LINE 辨識您的身份，免登入、免輸入密碼。';
     go('home');
   } else {
-    document.getElementById('home-hello').textContent = '陳先生，好久不見';
+    const displayName = lastPatientName || '陳先生';
+    document.getElementById('home-hello').textContent = `${displayName}，好久不見`;
     document.getElementById('home-headline').textContent = '今天也一起完成復健吧';
     document.getElementById('home-foot').textContent = '已經持續復健一段時間，本週已連續完成 3 天居家復健。';
+    document.getElementById('prereminder-msg').innerHTML = `${escapeHtml(displayName)}您好<br>物理治療回診`;
     go('prereminder');
   }
 }
