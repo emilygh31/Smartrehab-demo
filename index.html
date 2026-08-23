@@ -1028,7 +1028,10 @@ const NEAR_SLOT_CUTOFF = '2026-09-10';
 let slotToggleCounter = 0;
 function renderSlotsSection(slots, itemRenderer){
   if(!slots.length) return '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>';
-  const sorted = [...slots].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  const effectiveToday = todayStr();
+  const valid = slots.filter(s => s.date >= effectiveToday);
+  if(!valid.length) return '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>';
+  const sorted = [...valid].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
   const near = sorted.filter(s => s.date < NEAR_SLOT_CUTOFF);
   const later = sorted.filter(s => s.date >= NEAR_SLOT_CUTOFF);
   const nearHtml = near.map(itemRenderer).join('');
