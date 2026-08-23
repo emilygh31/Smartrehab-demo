@@ -1060,6 +1060,7 @@ function resetBookingState(){
   selectedSlot = null;
   followupPatientId = null;
   followupSlot = null;
+  followupCurrentTherapistName = null;
 }
 
 function fetchJson(url, options){
@@ -1427,6 +1428,7 @@ function toggleSwitch(el){
 // ---------- 舊客複診 ----------
 let followupPatientId = null;
 let followupSlot = null;
+let followupCurrentTherapistName = null;
 
 // 「時間快轉／持續復健中」demo情境下，真實01_patients已依檢查清單清空，
 // 若真實API查無此病患，改用這筆demo專用資料疊加顯示，維持「已有固定治療師」的故事線一致，不寫入真實Sheets
@@ -1469,6 +1471,7 @@ function lookupFollowup(){
 
 function renderFollowup(data){
   followupPatientId = data.patient_id;
+  followupCurrentTherapistName = data.therapist_name;
   const resultEl = document.getElementById('followup-result');
   resultEl.innerHTML = `
     <div class="tcard top">
@@ -1500,7 +1503,8 @@ function showOtherTherapists(){
   fetchJson(`${API_BASE}?action=allTherapists`)
     .then(data => {
       if(data.error) throw new Error(data.error);
-      container.innerHTML = data.map(t => `
+      const others = data.filter(t => t.name !== followupCurrentTherapistName);
+      container.innerHTML = others.map(t => `
         <div class="tcard">
           <div class="tcard-head"><div class="tcard-name">${escapeHtml(t.name)}</div></div>
           <div class="tags">${t.specialty_tags.map(tag=>`<span class="tag"><svg class="tag-icon" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M4 12h4l2-7 4 14 2-7h4"/></svg>${escapeHtml(tag)}</span>`).join('')}</div>
@@ -1533,12 +1537,21 @@ function pickFollowupSlot(el){
 
 function submitFollowupBooking(){
   if(!followupSlot){ alert('請先選擇時段'); return; }
+  if(!followupPatientId){ alert('查詢資料已失效，請重新查詢一次治療師'); return; }
   const btn = document.getElementById('followup-confirm-btn');
   btn.disabled = true;
   btn.textContent = '預約中...';
 
   // demo專用病患（時間快轉情境下真實查無資料時的疊加顯示），不呼叫真實API，直接模擬預約成功
   if(followupPatientId === DEMO_FOLLOWUP_PATIENT_ID){
+    demoBookedAppointments.push({
+      appointment_id: 'demo-booked-' + Date.now(),
+      date: followupSlot.date,
+      time: followupSlot.time,
+      therapist_name: followupSlot.therapistName,
+      status: 'confirmed',
+      isDemo: true
+    });
     document.getElementById('line-date').textContent = followupSlot.date.slice(5).replace('-','/');
     document.getElementById('line-time').textContent = followupSlot.time;
     document.getElementById('line-t').textContent = followupSlot.therapistName;
@@ -1592,6 +1605,9 @@ const DEMO_FOLLOWUP_APPT = {
   isDemo: true
 };
 const DEMO_FOLLOWUP_APPTS = [DEMO_FOLLOWUP_APPT];
+// 透過「查看其他治療師」demo短路流程模擬預約成功的記錄（不寫入真實Sheets），
+// 讓同一次瀏覽階段內，查詢/取消預約頁也能看到這筆剛剛模擬出來的預約，避免兩頁對不起來
+let demoBookedAppointments = [];
 
 function lookupAppointments(){
   const phone = document.getElementById('lookup-phone').value.trim();
@@ -1603,7 +1619,7 @@ function lookupAppointments(){
   fetchJson(`${API_BASE}?action=myAppointments&phone=${encodeURIComponent(phone)}`)
     .then(data => {
       if(data.error) throw new Error(data.error);
-      const merged = (demoMode === 'return' && isDemoScriptPhone(phone)) ? [...data, ...DEMO_FOLLOWUP_APPTS] : data;
+      const merged = (demoMode === 'return' && isDemoScriptPhone(phone)) ? [...data, ...DEMO_FOLLOWUP_APPTS, ...demoBookedAppointments] : data;
       renderAppointments(merged);
     })
     .catch(err => {
@@ -1678,8 +1694,9 @@ function todayStr(){
 
 function cancelAppt(appointmentId){
   if(!confirm('確定要取消這筆預約嗎？')) return;
-  if(appointmentId === DEMO_FOLLOWUP_APPT.appointment_id){
-    // 這筆是疊加展示的示範資料，只做畫面上的即時移除，不會呼叫真實API
+  if(appointmentId === DEMO_FOLLOWUP_APPT.appointment_id || appointmentId.startsWith('demo-booked-')){
+    // 這筆是疊加展示的示範資料，只做畫面上的即時移除與陣列清除，不會呼叫真實API
+    demoBookedAppointments = demoBookedAppointments.filter(a => a.appointment_id !== appointmentId);
     const el = document.querySelector(`[data-appt-id="${appointmentId}"]`);
     if(el) el.remove();
     return;
