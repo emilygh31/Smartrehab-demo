@@ -478,8 +478,8 @@
     <!-- HOME -->
     <section class="screen active" id="screen-home">
       <div class="brandmark"><div class="dot"></div><span>SmartRehab</span></div>
-      <div class="hello" id="home-hello">您好</div>
-      <h1 class="headline" id="home-headline">讓復健，不只發生在診所裡</h1>
+      <div class="hello" id="home-hello">您好 👋</div>
+      <h1 class="headline" id="home-headline" style="margin-top:-8px;">讓復健，不只發生在診所裡</h1>
       <div class="hello" id="home-subheadline" style="margin-top:-8px;">陪自己的身體，慢慢耕耘、慢慢康復</div>
       <button class="cta-primary" id="cta-book" onclick="go('form')">立即預約門診初診評估 <span>→</span></button>
       <button class="cta-secondary" onclick="go('rehab')">
@@ -1661,7 +1661,7 @@ function setMode(mode){
   document.getElementById('mode-new').classList.toggle('active', mode==='new');
   document.getElementById('mode-return').classList.toggle('active', mode==='return');
   if(mode==='new'){
-    document.getElementById('home-hello').textContent = '您好';
+    document.getElementById('home-hello').textContent = '您好 👋';
     document.getElementById('home-headline').textContent = '讓復健，不只發生在診所裡';
     document.getElementById('home-foot').textContent = '已透過 LINE 辨識您的身份，免登入、免輸入密碼。';
     go('home');
