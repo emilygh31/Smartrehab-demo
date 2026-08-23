@@ -640,10 +640,10 @@
         </div>
         <div class="line-msg-row">
           <div class="line-bubble">
-            <div id="prereminder-msg">XX先生/小姐您好<br>物理治療回診</div>
+            <div id="prereminder-msg">x先生/小姐您好<br>物理治療回診</div>
             <div class="line-detail">📅 <span>9/16（三）</span></div>
             <div class="line-detail">🕐 <span>10:00</span></div>
-            <div class="line-detail">👨‍⚕️ <span>張治療師</span></div>
+            <div class="line-detail">👨‍⚕️ <span>x治療師</span></div>
             <div style="margin-top:10px; font-size:12px; color:#666;">看診前請提早 10 分鐘報到，若需要調整時段可於App內改約。</div>
           </div>
           <div class="line-meta">已讀<br>上午9:00</div>
@@ -1728,7 +1728,6 @@ function setMode(mode){
     document.getElementById('home-hello').textContent = `${displayName}，好久不見`;
     document.getElementById('home-headline').textContent = '今天也一起完成復健吧';
     document.getElementById('home-foot').textContent = '已經持續復健一段時間，本週已連續完成 3 天居家復健。';
-    document.getElementById('prereminder-msg').innerHTML = `${escapeHtml(displayName)}您好<br>物理治療回診`;
     go('prereminder');
   }
 }
