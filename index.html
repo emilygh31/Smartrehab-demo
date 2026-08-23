@@ -478,7 +478,7 @@
     <!-- HOME -->
     <section class="screen active" id="screen-home">
       <div class="brandmark"><div class="dot"></div><span>SmartRehab</span></div>
-      <div class="hello" id="home-hello">陳先生，您好</div>
+      <div class="hello" id="home-hello">您好</div>
       <h1 class="headline" id="home-headline">讓復健，不只發生在診所裡</h1>
       <div class="hello" id="home-subheadline" style="margin-top:-8px;">陪自己的身體，慢慢耕耘、慢慢康復</div>
       <button class="cta-primary" id="cta-book" onclick="go('form')">立即預約門診初診評估 <span>→</span></button>
@@ -995,8 +995,9 @@ const NEAR_SLOT_CUTOFF = '2026-09-10';
 let slotToggleCounter = 0;
 function renderSlotsSection(slots, itemRenderer){
   if(!slots.length) return '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>';
-  const near = slots.filter(s => s.date < NEAR_SLOT_CUTOFF);
-  const later = slots.filter(s => s.date >= NEAR_SLOT_CUTOFF);
+  const sorted = [...slots].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  const near = sorted.filter(s => s.date < NEAR_SLOT_CUTOFF);
+  const later = sorted.filter(s => s.date >= NEAR_SLOT_CUTOFF);
   const nearHtml = near.map(itemRenderer).join('');
   if(!later.length) return nearHtml;
   const toggleId = 'slot-more-' + (slotToggleCounter++);
@@ -1660,7 +1661,7 @@ function setMode(mode){
   document.getElementById('mode-new').classList.toggle('active', mode==='new');
   document.getElementById('mode-return').classList.toggle('active', mode==='return');
   if(mode==='new'){
-    document.getElementById('home-hello').textContent = '陳先生，您好';
+    document.getElementById('home-hello').textContent = '您好';
     document.getElementById('home-headline').textContent = '讓復健，不只發生在診所裡';
     document.getElementById('home-foot').textContent = '已透過 LINE 辨識您的身份，免登入、免輸入密碼。';
     go('home');
