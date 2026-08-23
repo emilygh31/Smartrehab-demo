@@ -1661,7 +1661,7 @@ function renderAppointments(list){
     return `
     <div class="tcard" data-appt-id="${escapeHtml(a.appointment_id)}">
       <div class="tcard-head">
-        <div class="tcard-name">${escapeHtml(a.date.slice(5).replace('-','/'))} ${escapeHtml(a.time)}　${escapeHtml(a.therapist_name)}</div>
+        <div class="tcard-name">${escapeHtml(a.date.slice(5).replace('-','/'))} ${escapeHtml(a.time)}　${escapeHtml(a.therapist_name)}${a.isDemo ? ' <span style="font-size:10px; font-weight:400; color:var(--muted);">（demo示意）</span>' : ''}</div>
         <div class="badge" style="${a.stage!=='upcoming' ? 'background:var(--line);color:var(--muted);' : ''}">${stageBadge[a.stage]}</div>
       </div>
       ${actionHtml}
