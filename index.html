@@ -1013,6 +1013,10 @@ function playTone(freq, startTime, duration, volume){
 function playPopSound(){
   try{ playTone(880, 0, 0.12, 0.15); }catch(e){}
 }
+// 倒數計時每秒的輕微滴答聲
+function playTickSound(){
+  try{ playTone(1200, 0, 0.05, 0.06); }catch(e){}
+}
 // 全部完成／預約成功時的三音上升慶祝音
 function playChimeSound(){
   try{
@@ -1261,6 +1265,7 @@ function startTimer(exName, btnEl){
   timerInterval = setInterval(()=>{
     seconds--;
     updateTimerDisplay(seconds);
+    if(seconds > 0){ playTickSound(); }
     if(seconds<=0){
       clearInterval(timerInterval);
       completeActiveExercise();
