@@ -68,6 +68,16 @@
     flex-direction:column;
     position:relative;
   }
+  .bgm-toggle{
+    position:absolute; top:14px; right:14px; z-index:30;
+    width:28px; height:28px; border-radius:50%;
+    border:1px solid var(--line); background:var(--surface);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; padding:0;
+  }
+  .bgm-toggle .bgm-mute-line{ display:none; }
+  .bgm-toggle.muted .bgm-wave, .bgm-toggle.muted .bgm-wave2{ display:none; }
+  .bgm-toggle.muted .bgm-mute-line{ display:block; }
   .topbar{
     padding:16px 20px 10px;
     display:flex;
@@ -474,6 +484,16 @@
   </div>
 
   <div class="phone">
+
+    <button type="button" class="bgm-toggle muted" id="bgm-toggle-btn" onclick="toggleBgm(this)" aria-label="背景音樂開關">
+      <svg viewBox="0 0 24 24" width="15" height="15">
+        <path d="M4 9v6h4l5 4V5L8 9H4Z" fill="var(--ink)"/>
+        <path class="bgm-wave" d="M16.2 8.8a4.6 4.6 0 0 1 0 6.4" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/>
+        <path class="bgm-wave2" d="M18.6 6.4a8 8 0 0 1 0 11.2" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round" opacity="0.55"/>
+        <line class="bgm-mute-line" x1="3.5" y1="3.5" x2="20.5" y2="20.5" stroke="var(--danger)" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <audio id="bgm-audio" src="Warm%20Piano%20Ballad.mp3" loop preload="none"></audio>
 
     <!-- HOME -->
     <section class="screen active" id="screen-home">
@@ -1024,6 +1044,29 @@ function playChimeSound(){
     playTone(659.25, 0.12, 0.18, 0.12);
     playTone(783.99, 0.24, 0.28, 0.14);
   }catch(e){}
+}
+
+// ---------- 背景音樂（真實mp3檔案，可開關） ----------
+function startBgm(){
+  const audio = document.getElementById('bgm-audio');
+  if(!audio) return;
+  audio.volume = 0.25;
+  audio.play().catch(()=>{});
+}
+function stopBgm(){
+  const audio = document.getElementById('bgm-audio');
+  if(!audio) return;
+  audio.pause();
+}
+function toggleBgm(btn){
+  const isMuted = btn.classList.contains('muted');
+  if(isMuted){
+    btn.classList.remove('muted');
+    startBgm();
+  } else {
+    btn.classList.add('muted');
+    stopBgm();
+  }
 }
 
 // 時段分界日：這天之前算「近期」時段，預設直接顯示；這天(含)以後算「下週以後」，
