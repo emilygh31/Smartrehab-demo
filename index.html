@@ -966,6 +966,10 @@ function renderRehabScreen(){
   document.getElementById('rehab-empty').style.display = isNew ? 'flex' : 'none';
   document.getElementById('rehab-content').style.display = isNew ? 'none' : 'flex';
   if(!isNew){
+    // 計時器區塊可能被搬到某個動作卡片下方，重新渲染動作清單前先移回exlist外面，避免被innerHTML覆蓋一併清掉
+    const timerEl = document.getElementById('timerwrap');
+    const exlistEl = document.getElementById('exlist');
+    if(timerEl && exlistEl){ exlistEl.insertAdjacentElement('afterend', timerEl); }
     renderExerciseList();
     renderGarden();
     clearInterval(timerInterval);
@@ -1299,7 +1303,9 @@ function startTimer(exName, btnEl){
   const wrap = btnEl.closest('.exitem-wrap');
   const total = parseInt(wrap.dataset.total, 10) || 1;
   const done = parseInt(wrap.dataset.done, 10) || 0;
-  document.getElementById('timerwrap').style.display = 'block';
+  const timerEl = document.getElementById('timerwrap');
+  wrap.insertAdjacentElement('afterend', timerEl);
+  timerEl.style.display = 'block';
   document.getElementById('timerlabel').textContent = exName + `・第 ${done+1}／${total} 組休息`;
   activeExerciseBtn = btnEl;
   let seconds = TIMER_TOTAL;
