@@ -1073,19 +1073,28 @@ function toggleBgm(btn){
   }
 }
 
-// 時段分界日：這天之前算「近期」時段，預設直接顯示；這天(含)以後算「下週以後」，
-// 收合在「查看更多時段」按鈕後面，避免demo正式流程一開始就被看到很後面的可約時間
-const NEAR_SLOT_CUTOFF = '2026-09-10';
+// 時段分界日：不寫死固定日期，改成「情境當下今天 + 7天」動態計算，
+// 這樣不管是「初診當下」（真實今天）還是「時間快轉」（虛擬9/15），都能正確算出「這週以內」的範圍，
+// 這週以內直接顯示，之後收合在「查看更多時段」按鈕後面
+function addDaysToDateStr(dateStr, days){
+  const d = new Date(dateStr + 'T00:00:00');
+  d.setDate(d.getDate() + days);
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
 let slotToggleCounter = 0;
 function renderSlotsSection(slots, itemRenderer){
   if(!slots.length) return '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>';
   const effectiveToday = todayStr();
   const valid = slots.filter(s => s.date >= effectiveToday);
   if(!valid.length) return '<span style="font-size:12px;color:var(--muted);">目前無可預約時段</span>';
+  const nearCutoff = addDaysToDateStr(effectiveToday, 7);
   const sorted = [...valid].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
-  const near = sorted.filter(s => s.date < NEAR_SLOT_CUTOFF);
-  const later = sorted.filter(s => s.date >= NEAR_SLOT_CUTOFF);
-  const nearHtml = near.map(itemRenderer).join('');
+  const near = sorted.filter(s => s.date < nearCutoff);
+  const later = sorted.filter(s => s.date >= nearCutoff);
+  const nearHtml = near.length ? near.map(itemRenderer).join('') : '<span style="font-size:12px;color:var(--muted);">這週內暫無可預約時段</span>';
   if(!later.length) return nearHtml;
   const toggleId = 'slot-more-' + (slotToggleCounter++);
   const laterHtml = later.map(itemRenderer).join('');
