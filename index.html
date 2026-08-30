@@ -55,6 +55,9 @@
     gap:8px;
     justify-content:center;
     margin-bottom:14px;
+    overflow-x:auto;
+    max-width:100%;
+    padding:0 4px 4px;
   }
   .devbar button{
     border:1px solid var(--line);
@@ -65,6 +68,8 @@
     font-size:12px;
     font-family:'IBM Plex Sans',sans-serif;
     cursor:pointer;
+    white-space:nowrap;
+    flex:none;
   }
   .devbar button.active{
     background:var(--primary);
@@ -500,6 +505,7 @@
   <div class="devbar">
     <button id="mode-new" class="active" onclick="setMode('new')">示範：初診當下</button>
     <button id="mode-return" onclick="setMode('return')">示範：時間快轉／持續復健中</button>
+    <button id="mode-senior" onclick="showSeniorDemo()">示範：銀髮模式</button>
   </div>
 
   <div class="phone">
@@ -863,10 +869,50 @@
       <div id="appt-list" style="display:flex; flex-direction:column; gap:10px;"></div>
     </section>
 
+    <!-- 老人模式概念示意（靜態畫面，非實際可切換功能） -->
+    <section class="screen" id="screen-senior">
+      <div class="topbar"><div class="back" onclick="closeSeniorDemo()">←</div><div class="title">銀髮模式示意</div></div>
+      <div style="font-size:11px; color:var(--muted); text-align:center;">＊此為銀髮模式概念示意，展示未來規劃方向，非目前可切換的實際功能</div>
+      <div style="border:2px solid var(--ink); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:16px;">
+        <div>
+          <div class="brandmark"><div class="dot"></div><span style="font-size:13px;">SMARTREHAB</span></div>
+          <div style="font-size:17px; color:var(--muted); margin-top:8px;">陳先生，您好</div>
+          <h1 style="font-family:'Fraunces',serif; font-size:25px; font-weight:700; margin-top:4px;">今日居家復健</h1>
+        </div>
+        <div style="border:2px solid var(--ink); border-radius:12px; padding:16px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:19px; font-weight:700;">① 橋式</div>
+            <div style="font-size:16px; color:#4A4A47;">3 組 × 10 次</div>
+          </div>
+          <div style="background:var(--primary); color:#fff; font-size:16px; font-weight:600; padding:12px 20px; border-radius:999px;">休息</div>
+        </div>
+        <div style="border:2px solid var(--ink); border-radius:12px; padding:16px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:19px; font-weight:700;">② 貓牛式</div>
+            <div style="font-size:16px; color:#4A4A47;">2 組 × 8 次</div>
+          </div>
+          <div style="background:var(--primary); color:#fff; font-size:16px; font-weight:600; padding:12px 20px; border-radius:999px;">休息</div>
+        </div>
+        <div style="background:var(--primary); color:#fff; text-align:center; padding:18px; border-radius:12px; font-size:19px; font-weight:700;">完成今日復健，記錄疼痛</div>
+      </div>
+      <div style="font-size:12px; color:var(--muted); text-align:center;">字級放大約40-50%、按鈕觸控範圍加大、邊框加粗提高對比</div>
+    </section>
+
   </div>
 </div>
 
 <script>
+function showSeniorDemo(){
+  document.getElementById('mode-new').classList.remove('active');
+  document.getElementById('mode-return').classList.remove('active');
+  document.getElementById('mode-senior').classList.add('active');
+  go('senior');
+}
+function closeSeniorDemo(){
+  document.getElementById('mode-senior').classList.remove('active');
+  document.getElementById('mode-new').classList.add('active');
+  go('home');
+}
 function go(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
