@@ -30,11 +30,25 @@
     display:flex;
     justify-content:center;
     padding:24px 12px 60px;
+    overflow-x:hidden;
   }
+  .bg-decor{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(70px);
+    z-index:0;
+    pointer-events:none;
+  }
+  .bg-decor-1{ width:380px; height:380px; top:-120px; left:-120px; background:var(--primary-light); opacity:0.7; }
+  .bg-decor-2{ width:300px; height:300px; bottom:-90px; right:-90px; background:var(--accent); opacity:0.35; }
+  .bg-decor-3{ width:240px; height:240px; top:38%; right:4%; background:var(--primary); opacity:0.1; }
+  .bg-decor-4{ width:200px; height:200px; bottom:12%; left:3%; background:var(--accent); opacity:0.22; }
   h1,h2,h3{font-family:'Fraunces', serif; margin:0; letter-spacing:-0.01em;}
   .app{
     width:100%;
     max-width:420px;
+    position:relative;
+    z-index:1;
   }
   .devbar{
     display:flex;
@@ -476,6 +490,11 @@
 </style>
 </head>
 <body>
+
+<div class="bg-decor bg-decor-1"></div>
+<div class="bg-decor bg-decor-2"></div>
+<div class="bg-decor bg-decor-3"></div>
+<div class="bg-decor bg-decor-4"></div>
 
 <div class="app">
   <div class="devbar">
